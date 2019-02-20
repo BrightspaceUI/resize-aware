@@ -1,0 +1,21 @@
+{
+	"name": "d2l-resize-aware",
+	"version": "1.0.0",
+	"description": "A Polymer 3 compatible method to detect changes in an element's size and/or position",
+	"main": "d2l-resize-aware.js",
+	"scripts": {
+		"serve": "polymer serve",
+		"lint": "eslint d2l-resize-aware.js"
+	},
+	"author": "D2L Corporation",
+	"dependencies": {
+		"@polymer/polymer": "^3.0.0"
+	},
+	"devDependencies": {
+		"@webcomponents/webcomponentsjs": "^2.2.1",
+		"d2l-inputs": "BrightspaceUI/inputs#semver:^2",
+		"polymer-cli": "^1.9.6",
+		"eslint": "^4.15.0",
+		"eslint-config-brightspace": "^0.4.0"
+	}
+}
