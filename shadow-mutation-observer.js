@@ -10,6 +10,7 @@ class ShadowMutationObserver {
 		this._hasTextarea = false;
 		this._callback = callback;
 		this._trackedComponents = new Map();
+		this._disposeEvents = () => null;
 		this._rootObserver = new MutationObserver( function( mutationRecords ) {
 			let elementsRemoved = false;
 			
@@ -44,6 +45,12 @@ class ShadowMutationObserver {
 		});
 		this._trackWebComponents( node );
 		this._checkForTextArea( node );
+		
+		if( node instanceof ShadowRoot ) {
+			let transitionEndCallback = event => this.onTransitionEnd( event );
+			node.addEventListener( 'transitionend', transitionEndCallback );
+			this._disposeEvents = () => node.removeEventListener( 'transitionend', transitionEndCallback );
+		}
 	}
 	
 	destroy() {
@@ -52,6 +59,7 @@ class ShadowMutationObserver {
 			observer.destroy();
 		});
 		this._trackedComponents.clear();
+		this._disposeEvents();
 	}
 	
 	get hasTextarea() {
@@ -62,8 +70,16 @@ class ShadowMutationObserver {
 		/* override */
 	}
 	
+	onTransitionEnd( event ) {
+		/* override */
+	}
+	
 	_trackWebComponents( node ) {
 		if( node.shadowRoot && !this._trackedComponents.get( node ) ) {
+			let childObserver = new ShadowMutationObserver( node.shadowRoot, this._callback );
+			childObserver.onHasTextareaChanged = hasTextarea => this.onHasTextareaChanged( hasTextarea );
+			childObserver.onTransitionEnd = event => this.onTransitionEnd( event );
+			
 			this._trackedComponents.set(
 				node,
 				new ShadowMutationObserver( node.shadowRoot, this._callback )

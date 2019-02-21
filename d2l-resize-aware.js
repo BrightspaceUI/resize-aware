@@ -91,6 +91,7 @@ Polymer({
 				mutationObservers = this.$.slot.assignedNodes({ flatten: true }).map( function( child ) {
 					let shadowObserver = new ShadowMutationObserver( child, callback );
 					shadowObserver.onHasTextareaChanged = checkIfSafariWorkaroundIsRequired.bind( this );
+					shadowObserver.onTransitionEnd = callback;
 					return shadowObserver;
 				}.bind( this ));
 				
