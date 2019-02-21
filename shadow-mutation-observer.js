@@ -80,10 +80,7 @@ class ShadowMutationObserver {
 			childObserver.onHasTextareaChanged = hasTextarea => this.onHasTextareaChanged( hasTextarea );
 			childObserver.onTransitionEnd = event => this.onTransitionEnd( event );
 			
-			this._trackedComponents.set(
-				node,
-				new ShadowMutationObserver( node.shadowRoot, this._callback )
-			);
+			this._trackedComponents.set( node, childObserver );
 		}
 		
 		let children = node.children || node.childNodes || [];
