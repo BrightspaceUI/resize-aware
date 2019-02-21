@@ -78,10 +78,14 @@ class ShadowMutationObserver {
 	
 	/* Workaround for Safari >:( */
 	_checkForTextArea( node ) {
-		let hasTextarea = (
-			node.tagName === 'TEXTAREA' ||
-			!!( node.querySelector && node.querySelector( 'textarea' ) )
-		);
+		let hasTextarea = (node.tagName === 'TEXTAREA');
+		
+		if( !hasTextarea && node.querySelectorAll ) {
+			let textareas = node.querySelectorAll( 'textarea' );
+			for( let i = 0; i < textareas.length; i++ ) {
+				hasTextarea = hasTextarea || window.getComputedStyle( textareas[i] ).resize !== 'none';
+			}
+		}
 		
 		if( !hasTextarea ) {
 			this._trackedComponents.forEach( function( observer, component ) {
