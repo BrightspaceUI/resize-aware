@@ -10,20 +10,27 @@ class ShadowMutationObserver {
 		this._callback = callback;
 		this._trackedComponents = new Map();
 		this._rootObserver = new MutationObserver( function( mutationRecords ) {
+			let elementsRemoved = false;
+			
 			// Start tracking any new webcomponents in the node's subtree
 			mutationRecords.forEach( function( record ) {
 				for( let i = 0; i < record.addedNodes.length; i++ ) {
 					this._trackWebComponents( record.addedNodes[i] );
 				}
+				
+				elementsRemoved |= record.removedNodes && record.removedNodes.length > 0;
 			}.bind( this ));
 			
-			// Stop tracking webcomponents that are no longer descendants of the node
-			this._trackedComponents.forEach( function( observer, trackedComponent ) {
-				if( !node.contains( trackedComponent ) ) {
-					observer.destroy();
-					this._trackedComponents.delete( trackedComponent );
-				}
-			}.bind( this ));
+			if( elementsRemoved ) {
+				// Stop tracking webcomponents that are no longer descendants of the node
+				this._trackedComponents.forEach( function( observer, trackedComponent ) {
+					if( !node.contains( trackedComponent ) ) {
+						observer.destroy();
+						this._trackedComponents.delete( trackedComponent );
+					}
+				}.bind( this ));
+			}
+			
 			callback( mutationRecords );
 		}.bind( this ));
 		
