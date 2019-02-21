@@ -39,17 +39,19 @@ Polymer({
 		this._lastSize = this.getBoundingClientRect();
 		this._usingSafariWorkaround = false;
 		
+		this._onPossibleResize = this._onPossibleResize.bind( this );
+		
 		let hasNativeResizeObserver = window.ResizeObserver && window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
 		let usingShadyDomPolyfill = !!this.__shady;
 		
 		if( hasNativeResizeObserver ) {
 			/* Use native ResizeObserver */
-			let observer = new window.ResizeObserver( this._onPossibleResize.bind( this ) );
+			let observer = new window.ResizeObserver( this._onPossibleResize );
 			observer.observe( this );
 			this._destructor = observer.unobserve.bind( observer, this );
 		} else if ( usingShadyDomPolyfill ) {
 			/* Use a mutation observer and rely on the Shady DOM polyfill to make it work */
-			let callback = this._onPossibleResize.bind( this );
+			let callback = this._onPossibleResize;
 			window.addEventListener( 'resize', callback );
 			document.addEventListener( 'transitionend', callback );
 			
@@ -68,7 +70,7 @@ Polymer({
 			}.bind( this );
 		} else {
 			/* Monitor all webcomponents in the subtree for changes */
-			let callback = this._onPossibleResize.bind( this );
+			let callback = this._onPossibleResize;
 			window.addEventListener( 'resize', callback );
 			document.addEventListener( 'transitionend', callback );
 			
@@ -152,24 +154,29 @@ Polymer({
 		this._lastSize = newSize;
 	},
 	
-	/* Safari's MutationObserver does not detect textarea resizes that
-	 * occur as a result of the user dragging the resizer, so we just
-	 * have to poll for changes in this case :(
-	 */
-	_safariTextareaWorkaround: function() {
-		if( this._usingSafariWorkaround ) {
-			this._onPossibleResize();
-			window.requestAnimationFrame( this._safariTextareaWorkaround.bind( this ) );
-		}
-	},
-	
 	_changeSafariWorkaroundStatus: function( useWorkaround ) {
-		if( useWorkaround && !this._usingSafariWorkaround ) {
-			this._usingSafariWorkaround = useWorkaround;
-			this._safariTextareaWorkaround();
-		} else {
-			this._usingSafariWorkaround = useWorkaround;
+		if( this._usingSafariWorkaround === !!useWorkaround ) {
+			return;
 		}
+		
+		/* Safari's MutationObserver does not detect resizes on native textareas
+		 * that occur as a result of the user dragging the resizer, so we just
+		 * have to poll for changes in this case, but only on frames where the
+		 * user could be resizing the textbox. Putting a mousemove event
+		 * listener on this element won't work because the textbox lags behind
+		 * the cursor, but we can at least only do a resize check when the mouse
+		 * is moving instead of on every frame.
+		 *
+		 * This workaround is only used if there is a textarea element somewhere
+		 * inside this element that does not have 'resize: none' in its styling,
+		 * and only if the browser is Safari.
+		 */
+		if( useWorkaround ) {
+			window.addEventListener( 'mousemove', this._onPossibleResize );
+		} else {
+			window.removeEventListener( 'mousemove', this._onPossibleResize );
+		}
+		this._usingSafariWorkaround = !!useWorkaround;
 	}
 	
 });
