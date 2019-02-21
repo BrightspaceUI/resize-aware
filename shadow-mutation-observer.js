@@ -7,6 +7,7 @@
 class ShadowMutationObserver {
 	
 	constructor( node, callback ) {
+		this._hasTextarea = false;
 		this._callback = callback;
 		this._trackedComponents = new Map();
 		this._rootObserver = new MutationObserver( function( mutationRecords ) {
@@ -31,6 +32,7 @@ class ShadowMutationObserver {
 				}.bind( this ));
 			}
 			
+			this._checkForTextArea( node );
 			callback( mutationRecords );
 		}.bind( this ));
 		
@@ -41,6 +43,7 @@ class ShadowMutationObserver {
 			subtree: true
 		});
 		this._trackWebComponents( node );
+		this._checkForTextArea( node );
 	}
 	
 	destroy() {
@@ -49,6 +52,14 @@ class ShadowMutationObserver {
 			observer.destroy();
 		});
 		this._trackedComponents.clear();
+	}
+	
+	get hasTextarea() {
+		return this._hasTextarea;
+	}
+	
+	onHasTextareaChanged( hasTextarea ) {
+		/* override */
 	}
 	
 	_trackWebComponents( node ) {
@@ -62,6 +73,25 @@ class ShadowMutationObserver {
 		let children = node.children || node.childNodes || [];
 		for( var i = 0; i < children.length; i++ ) {
 			this._trackWebComponents( children[i] );
+		}
+	}
+	
+	/* Workaround for Safari >:( */
+	_checkForTextArea( node ) {
+		let hasTextarea = (
+			node.tagName === 'TEXTAREA' ||
+			!!( node.querySelector && node.querySelector( 'textarea' ) )
+		);
+		
+		if( !hasTextarea ) {
+			this._trackedComponents.forEach( function( observer, component ) {
+				hasTextarea = hasTextarea || observer.hasTextarea;
+			});
+		}
+		
+		if( hasTextarea !== this._hasTextarea ) {
+			this._hasTextarea = hasTextarea;
+			this.onHasTextareaChanged( hasTextarea );
 		}
 	}
 	

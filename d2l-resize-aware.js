@@ -37,6 +37,7 @@ Polymer({
 	
 	attached: function() {
 		this._lastSize = this.getBoundingClientRect();
+		this._usingSafariWorkaround = false;
 		
 		let hasNativeResizeObserver = window.ResizeObserver && window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
 		let usingShadyDomPolyfill = !!this.__shady;
@@ -71,17 +72,30 @@ Polymer({
 			window.addEventListener( 'resize', callback );
 			document.addEventListener( 'transitionend', callback );
 			
+			let isSafari =
+				window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
+				window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
+			
 			let mutationObservers = [];
+			
+			const checkIfSafariWorkaroundIsRequired = function() {
+				if( !isSafari ) return;
+				this._changeSafariWorkaroundStatus(
+					mutationObservers.some( o => o.hasTextarea )
+				);
+			}.bind( this );
+			
 			let onSlotChanged = function() {
-				mutationObservers.forEach( function( observer ) {
-					observer.destroy();
-				});
+				mutationObservers.forEach( observer => observer.destroy() );
 				
 				mutationObservers = this.$.slot.assignedNodes({ flatten: true }).map( function( child ) {
-					return new ShadowMutationObserver( child, callback );
-				});
+					let shadowObserver = new ShadowMutationObserver( child, callback );
+					shadowObserver.onHasTextareaChanged = checkIfSafariWorkaroundIsRequired.bind( this );
+					return shadowObserver;
+				}.bind( this ));
 				
 				this._onPossibleResize();
+				checkIfSafariWorkaroundIsRequired();
 			}.bind( this );
 			
 			this.$.slot.addEventListener( 'slotchange', onSlotChanged );
@@ -91,9 +105,7 @@ Polymer({
 				window.removeEventListener( 'resize', callback );
 				document.removeEventListener( 'transitionend', callback );
 				this.$.slot.removeEventListener( 'slotchange', onSlotChanged );
-				mutationObservers.forEach( function( observer ) {
-					observer.destroy();
-				});
+				mutationObservers.forEach( observer => observer.destroy() );
 			}.bind( this );
 		}
 		
@@ -137,6 +149,26 @@ Polymer({
 			)
 		);
 		this._lastSize = newSize;
+	},
+	
+	/* Safari's MutationObserver does not detect textarea resizes that
+	 * occur as a result of the user dragging the resizer, so we just
+	 * have to poll for changes in this case :(
+	 */
+	_safariTextareaWorkaround: function() {
+		if( this._usingSafariWorkaround ) {
+			this._onPossibleResize();
+			window.requestAnimationFrame( this._safariTextareaWorkaround.bind( this ) );
+		}
+	},
+	
+	_changeSafariWorkaroundStatus: function( useWorkaround ) {
+		if( useWorkaround && !this._usingSafariWorkaround ) {
+			this._usingSafariWorkaround = useWorkaround;
+			this._safariTextareaWorkaround();
+		} else {
+			this._usingSafariWorkaround = useWorkaround;
+		}
 	}
 	
 });
