@@ -173,8 +173,10 @@ Polymer({
 		 */
 		if( useWorkaround ) {
 			window.addEventListener( 'mousemove', this._onPossibleResize );
+			window.addEventListener( 'touchmove', this._onPossibleResize );
 		} else {
 			window.removeEventListener( 'mousemove', this._onPossibleResize );
+			window.removeEventListener( 'touchmove', this._onPossibleResize );
 		}
 		this._usingSafariWorkaround = !!useWorkaround;
 	}
