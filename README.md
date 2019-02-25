@@ -10,7 +10,6 @@ A Polymer 3 compatible solution to reacting to changes in an element's size and/
 #### Properties
 
  - `position-aware` (flag) - Also fires a `d2lresize` event when the component's position changes (by default this event is only fired on a size change)
- - `bubble-event` (flag) - Causes the `d2lresize` event to bubble up through the DOM
  
 #### Events
 

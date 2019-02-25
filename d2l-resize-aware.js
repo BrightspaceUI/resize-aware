@@ -26,10 +26,6 @@ Polymer({
 			type: Boolean,
 			value: false
 		},
-		bubbleEvent: {
-			type: Boolean,
-			value: false
-		},
 		
 		_destructor: Function,
 		_lastSize: Object
@@ -139,10 +135,8 @@ Polymer({
 		const newSize = this.getBoundingClientRect();
 		this.dispatchEvent(
 			new CustomEvent(
-				'd2lresize',
+				'd2l-resize-aware-resized',
 				{
-					composed: true,
-					bubbles: !!this.bubbleEvent,
 					target: this,
 					detail: {
 						previous: this._lastSize,
