@@ -47,7 +47,7 @@ class ShadowMutationObserver {
 		this._checkForTextArea( node );
 		
 		if( node instanceof ShadowRoot ) {
-			let transitionEndCallback = event => this.onTransitionEnd( event );
+			const transitionEndCallback = event => this.onTransitionEnd( event );
 			node.addEventListener( 'transitionend', transitionEndCallback );
 			this._disposeEvents = () => node.removeEventListener( 'transitionend', transitionEndCallback );
 		}
@@ -55,7 +55,7 @@ class ShadowMutationObserver {
 	
 	destroy() {
 		this._rootObserver.disconnect();
-		this._trackedComponents.forEach( function( observer, node ) {
+		this._trackedComponents.forEach( function( observer ) {
 			observer.destroy();
 		});
 		this._trackedComponents.clear();
@@ -66,24 +66,24 @@ class ShadowMutationObserver {
 		return this._hasTextarea;
 	}
 	
-	onHasTextareaChanged( hasTextarea ) {
+	onHasTextareaChanged( /* hasTextarea */ ) {
 		/* override */
 	}
 	
-	onTransitionEnd( event ) {
+	onTransitionEnd( /* event */ ) {
 		/* override */
 	}
 	
 	_trackWebComponents( node ) {
 		if( node.shadowRoot && !this._trackedComponents.get( node ) ) {
-			let childObserver = new ShadowMutationObserver( node.shadowRoot, this._callback );
+			const childObserver = new ShadowMutationObserver( node.shadowRoot, this._callback );
 			childObserver.onHasTextareaChanged = hasTextarea => this.onHasTextareaChanged( hasTextarea );
 			childObserver.onTransitionEnd = event => this.onTransitionEnd( event );
 			
 			this._trackedComponents.set( node, childObserver );
 		}
 		
-		let children = node.children || node.childNodes || [];
+		const children = node.children || node.childNodes || [];
 		for( var i = 0; i < children.length; i++ ) {
 			this._trackWebComponents( children[i] );
 		}
@@ -94,14 +94,14 @@ class ShadowMutationObserver {
 		let hasTextarea = (node.tagName === 'TEXTAREA');
 		
 		if( !hasTextarea && node.querySelectorAll ) {
-			let textareas = node.querySelectorAll( 'textarea' );
+			const textareas = node.querySelectorAll( 'textarea' );
 			for( let i = 0; i < textareas.length; i++ ) {
 				hasTextarea = hasTextarea || window.getComputedStyle( textareas[i] ).resize !== 'none';
 			}
 		}
 		
 		if( !hasTextarea ) {
-			this._trackedComponents.forEach( function( observer, component ) {
+			this._trackedComponents.forEach( function( observer ) {
 				hasTextarea = hasTextarea || observer.hasTextarea;
 			});
 		}

@@ -1,21 +1,14 @@
 {
 	"extends": "brightspace/browser-config",
-	"env": {
-		"browser": true
-	},
 	"rules": {
-		"no-unused-vars": 2,
-		"no-console": 1,
-		"prefer-const": 0,
 		"keyword-spacing": 0,
 		"space-in-parens": 0,
 		"no-trailing-spaces": 0
 	},
 	"parserOptions": {
-		"ecmaVersion": 6,
 		"sourceType": "module"
 	},
 	"globals": {
-		"Polymer": true
+		"Map": true
 	}
 }

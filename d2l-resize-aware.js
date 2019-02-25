@@ -41,21 +41,21 @@ Polymer({
 		
 		this._onPossibleResize = this._onPossibleResize.bind( this );
 		
-		let hasNativeResizeObserver = window.ResizeObserver && window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
-		let usingShadyDomPolyfill = !!this.__shady;
+		const hasNativeResizeObserver = window.ResizeObserver && window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
+		const usingShadyDomPolyfill = !!this.__shady;
 		
 		if( hasNativeResizeObserver ) {
 			/* Use native ResizeObserver */
-			let observer = new window.ResizeObserver( this._onPossibleResize );
+			const observer = new window.ResizeObserver( this._onPossibleResize );
 			observer.observe( this );
 			this._destructor = observer.unobserve.bind( observer, this );
 		} else if ( usingShadyDomPolyfill ) {
 			/* Use a mutation observer and rely on the Shady DOM polyfill to make it work */
-			let callback = this._onPossibleResize;
+			const callback = this._onPossibleResize;
 			window.addEventListener( 'resize', callback );
 			document.addEventListener( 'transitionend', callback );
 			
-			let mutationObserver = new MutationObserver( callback );
+			const mutationObserver = new MutationObserver( callback );
 			mutationObserver.observe( this, {
 				attributes: true,
 				childList: true,
@@ -70,11 +70,11 @@ Polymer({
 			}.bind( this );
 		} else {
 			/* Monitor all webcomponents in the subtree for changes */
-			let callback = this._onPossibleResize;
+			const callback = this._onPossibleResize;
 			window.addEventListener( 'resize', callback );
 			document.addEventListener( 'transitionend', callback );
 			
-			let isSafari =
+			const isSafari =
 				window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
 				window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
 			
@@ -87,11 +87,11 @@ Polymer({
 				);
 			}.bind( this );
 			
-			let onSlotChanged = function() {
+			const onSlotChanged = function() {
 				mutationObservers.forEach( observer => observer.destroy() );
 				
 				mutationObservers = this.$.slot.assignedNodes({ flatten: true }).map( function( child ) {
-					let shadowObserver = new ShadowMutationObserver( child, callback );
+					const shadowObserver = new ShadowMutationObserver( child, callback );
 					shadowObserver.onHasTextareaChanged = checkIfSafariWorkaroundIsRequired.bind( this );
 					shadowObserver.onTransitionEnd = callback;
 					return shadowObserver;
@@ -122,7 +122,7 @@ Polymer({
 	},
 	
 	_onPossibleResize: function() {
-		let newSize = this.getBoundingClientRect();
+		const newSize = this.getBoundingClientRect();
 		if(
 			newSize.width !== this._lastSize.width ||
 			newSize.height !== this._lastSize.height ||
@@ -136,7 +136,7 @@ Polymer({
 	},
 	
 	_onResize: function() {
-		let newSize = this.getBoundingClientRect();
+		const newSize = this.getBoundingClientRect();
 		this.dispatchEvent(
 			new CustomEvent(
 				'd2lresize',

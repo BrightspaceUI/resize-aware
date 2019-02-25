@@ -5,7 +5,7 @@
 	"main": "d2l-resize-aware.js",
 	"scripts": {
 		"serve": "polymer serve",
-		"lint": "eslint d2l-resize-aware.js"
+		"lint": "eslint *.js"
 	},
 	"author": "D2L Corporation",
 	"dependencies": {
