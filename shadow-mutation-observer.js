@@ -97,6 +97,7 @@ class ShadowMutationObserver {
 			const textareas = node.querySelectorAll( 'textarea' );
 			for( let i = 0; i < textareas.length; i++ ) {
 				hasTextarea = hasTextarea || window.getComputedStyle( textareas[i] ).resize !== 'none';
+				if( hasTextarea ) break;
 			}
 		}
 		
