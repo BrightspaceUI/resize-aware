@@ -1,4 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import ShadowMutationObserver from './shadow-mutation-observer.js';
 
 class D2LResizeAware extends PolymerElement {
@@ -25,28 +26,63 @@ class D2LResizeAware extends PolymerElement {
 				value: false
 			},
 			
+			_hasNativeResizeObserver: Boolean,
+			_usingShadyDomPolyfill: Boolean,
+			_isSafari: Boolean,
+			_usingSafariWorkaround: Boolean,
 			_destructor: Function,
 			_lastSize: Object
 		};
 	}
 	
+	constructor() {
+		super();
+		
+		this._hasNativeResizeObserver =
+			window.ResizeObserver &&
+			window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
+		
+		this._isSafari =
+			window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
+			window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
+			
+		this._destructor = null;
+		this._onPossibleResize = this._onPossibleResize.bind( this );
+	}
+	
+	ready() {
+		super.ready();
+		this._usingShadyDomPolyfill = !!this.__shady;
+	}
+	
 	connectedCallback() {
 		super.connectedCallback();
-		
 		this._lastSize = this.getBoundingClientRect();
+		afterNextRender( this, this._initialize.bind( this ) );
+		this._onResize();
+	}
+	
+	disconnectedCallback() {
+		if( this._destructor ) {
+			this._destructor();
+			this._destructor = null;
+		}
+		super.disconnectedCallback();
+	}
+	
+	_initialize() {
+		if( this._destructor ) {
+			this._destructor();
+			this._destructor = null;
+		}
+		
 		this._usingSafariWorkaround = false;
-		
-		this._onPossibleResize = this._onPossibleResize.bind( this );
-		
-		const hasNativeResizeObserver = window.ResizeObserver && window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
-		const usingShadyDomPolyfill = !!this.__shady;
-		
-		if( hasNativeResizeObserver ) {
+		if( this._hasNativeResizeObserver ) {
 			/* Use native ResizeObserver */
 			const observer = new window.ResizeObserver( this._onPossibleResize );
 			observer.observe( this );
 			this._destructor = observer.unobserve.bind( observer, this );
-		} else if ( usingShadyDomPolyfill ) {
+		} else if ( this._usingShadyDomPolyfill ) {
 			/* Use a mutation observer and rely on the Shady DOM polyfill to make it work */
 			const callback = this._onPossibleResize;
 			window.addEventListener( 'resize', callback );
@@ -71,14 +107,9 @@ class D2LResizeAware extends PolymerElement {
 			window.addEventListener( 'resize', callback );
 			document.addEventListener( 'transitionend', callback );
 			
-			const isSafari =
-				window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
-				window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
-			
 			let mutationObservers = [];
-			
 			const checkIfSafariWorkaroundIsRequired = function() {
-				if( !isSafari ) return;
+				if( !this._isSafari ) return;
 				this._changeSafariWorkaroundStatus(
 					mutationObservers.some( o => o.hasTextarea )
 				);
@@ -109,14 +140,7 @@ class D2LResizeAware extends PolymerElement {
 			}.bind( this );
 		}
 		
-		this._onResize();
-	}
-	
-	disconnectedCallback() {
-		if( this._destructor ) {
-			this._destructor();
-		}
-		super.disconnectedCallback();
+		this._onPossibleResize();
 	}
 	
 	_onPossibleResize() {
