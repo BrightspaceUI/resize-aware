@@ -9,7 +9,7 @@ A Polymer 3 compatible solution to reacting to changes in an element's size and/
 
 #### Properties
 
- - `position-aware` (flag) - Also fires a `d2lresize` event when the component's position changes (by default this event is only fired on a size change)
+ - `position-aware` (flag) - Also fires a `d2l-resize-aware-resized` event when the component's position changes (by default this event is only fired on a size change)
  
 #### Events
 
