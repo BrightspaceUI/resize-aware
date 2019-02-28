@@ -14,7 +14,7 @@ A Polymer 3 compatible solution to reacting to changes in an element's size and/
 #### Events
 
  - `d2lresize`
-   Fired when the component's size (or position if the `position-aware` flag is specified) changes. This even is also fired once when the component is attached to the DOM.
+   Fired when the component's size (or position if the `position-aware` flag is specified) changes. This event is also fired once when the component is attached to the DOM.
 
    **Bubbles:** only if `bubble-event` flag is set  
    **Composed:** yes
