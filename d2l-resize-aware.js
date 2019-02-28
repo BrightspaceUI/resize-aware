@@ -1,37 +1,38 @@
-import '@polymer/polymer/polymer-legacy.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { PolymerElement, html } from '@polymer/polymer';
 import ShadowMutationObserver from './shadow-mutation-observer.js';
 
-const $_documentContainer = document.createElement('template');
-$_documentContainer.innerHTML = `<dom-module id="d2l-resize-aware">
-	<template strip-whitespace="">
-		<style>
-			:host {
-				display: inline-block;
-			}
-		</style>
-		<slot id="slot"></slot>
-	</template>
+class D2LResizeAware extends PolymerElement {
 	
-</dom-module>`;
-
-document.head.appendChild($_documentContainer.content);
-
-Polymer({
+	static get is() {
+		return 'd2l-resize-aware';
+	}
 	
-	is:'d2l-resize-aware',
+	static get template() {
+		return html`
+			<style>
+				:host {
+					display: inline-block;
+				}
+			</style>
+			<slot id="slot"></slot>
+		`;
+	}
 	
-	properties: {
-		positionAware: {
-			type: Boolean,
-			value: false
-		},
+	static get properties() {
+		return {
+			positionAware: {
+				type: Boolean,
+				value: false
+			},
+			
+			_destructor: Function,
+			_lastSize: Object
+		};
+	}
+	
+	connectedCallback() {
+		super.connectedCallback();
 		
-		_destructor: Function,
-		_lastSize: Object
-	},
-	
-	attached: function() {
 		this._lastSize = this.getBoundingClientRect();
 		this._usingSafariWorkaround = false;
 		
@@ -86,12 +87,12 @@ Polymer({
 			const onSlotChanged = function() {
 				mutationObservers.forEach( observer => observer.destroy() );
 				
-				mutationObservers = this.$.slot.assignedNodes({ flatten: true }).map( function( child ) {
+				mutationObservers = this.$.slot.assignedNodes({ flatten: true }).map( child => {
 					const shadowObserver = new ShadowMutationObserver( child, callback );
 					shadowObserver.onHasTextareaChanged = checkIfSafariWorkaroundIsRequired.bind( this );
 					shadowObserver.onTransitionEnd = callback;
 					return shadowObserver;
-				}.bind( this ));
+				});
 				
 				this._onPossibleResize();
 				checkIfSafariWorkaroundIsRequired();
@@ -109,15 +110,16 @@ Polymer({
 		}
 		
 		this._onResize();
-	},
+	}
 	
-	detached: function() {
+	disconnectedCallback() {
 		if( this._destructor ) {
 			this._destructor();
 		}
-	},
+		super.disconnectedCallback();
+	}
 	
-	_onPossibleResize: function() {
+	_onPossibleResize() {
 		const newSize = this.getBoundingClientRect();
 		if(
 			newSize.width !== this._lastSize.width ||
@@ -129,9 +131,9 @@ Polymer({
 		) {
 			this._onResize();
 		}
-	},
+	}
 	
-	_onResize: function() {
+	_onResize() {
 		const newSize = this.getBoundingClientRect();
 		this.dispatchEvent(
 			new CustomEvent(
@@ -146,9 +148,9 @@ Polymer({
 			)
 		);
 		this._lastSize = newSize;
-	},
+	}
 	
-	_changeSafariWorkaroundStatus: function( useWorkaround ) {
+	_changeSafariWorkaroundStatus( useWorkaround ) {
 		if( this._usingSafariWorkaround === !!useWorkaround ) {
 			return;
 		}
@@ -175,4 +177,6 @@ Polymer({
 		this._usingSafariWorkaround = !!useWorkaround;
 	}
 	
-});
+}
+
+customElements.define( D2LResizeAware.is, D2LResizeAware );
