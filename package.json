@@ -4,7 +4,8 @@
 	"description": "A Polymer 3 compatible method to detect changes in an element's size and/or position",
 	"main": "d2l-resize-aware.js",
 	"scripts": {
-		"serve": "polymer serve",
+		"serve": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
+		"serve:local": "polymer serve",
 		"lint": "eslint *.js"
 	},
 	"author": "D2L Corporation",
