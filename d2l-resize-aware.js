@@ -9,7 +9,7 @@ class D2LResizeAware extends PolymerElement {
 	}
 	
 	static get template() {
-		return html`
+		const template = html`
 			<style>
 				:host {
 					display: inline-block;
@@ -17,6 +17,8 @@ class D2LResizeAware extends PolymerElement {
 			</style>
 			<slot id="slot"></slot>
 		`;
+		template.setAttribute('strip-whitespace', true);
+		return template;
 	}
 	
 	static get properties() {

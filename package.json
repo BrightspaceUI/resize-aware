@@ -4,9 +4,10 @@
 	"description": "A Polymer 3 compatible method to detect changes in an element's size and/or position",
 	"main": "d2l-resize-aware.js",
 	"scripts": {
-		"serve": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
-		"serve:local": "polymer serve",
-		"lint": "eslint *.js"
+		"serve:public": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
+		"serve": "polymer serve",
+		"lint": "eslint *.js",
+		"test": "polymer test --skip-plugin sauce"
 	},
 	"author": "D2L Corporation",
 	"dependencies": {
@@ -17,6 +18,7 @@
 		"d2l-inputs": "BrightspaceUI/inputs#semver:^2",
 		"polymer-cli": "^1.9.6",
 		"eslint": "^4.15.0",
-		"eslint-config-brightspace": "^0.4.0"
+		"eslint-config-brightspace": "^0.4.0",
+		"wct-browser-legacy": "^1.0.1"
 	}
 }

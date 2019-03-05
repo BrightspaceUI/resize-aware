@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+		<title>d2l-reize-aware test</title>
+
+		<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+		<script src="../../wct-browser-legacy/browser.js"></script>
+
+		<script type="module" src="../d2l-resize-aware.js"></script>
+		
+		<style>
+			.box {
+				background-color: black;
+				width: 200px;
+				height: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<test-fixture id="NativeElementsFixture">
+			<template strip-whitespace>
+				<d2l-resize-aware>
+					<div class="box"></div>
+				</d2l-resize-aware>
+			</template>
+		</test-fixture>
+		<script type="module">
+describe('<d2l-resize-aware>', function() {
+
+	let resizeEventFired = false;
+	let component;
+	
+	const runTest = function( expectEvent, done, action ) {
+		component.addEventListener( 'd2l-resize-aware-resized', function() {
+			resizeEventFired = true;
+		});
+		
+		setTimeout( function() {
+			resizeEventFired = false;
+			action();
+			setTimeout( function() {
+				assert.equal( !!resizeEventFired, !!expectEvent );
+				done();
+			}, 250 );
+		}, 0 );
+	};
+
+	describe('contains native HTML elements', function() {
+
+		beforeEach(function() {
+			component = fixture('NativeElementsFixture');
+		});
+
+		it('element resized', function( done ) {
+			runTest( true, done, function() {
+				component.querySelector( '.box' ).style.width = '600px';
+			});
+		});
+		
+		it('element added', function( done ) {
+			runTest( true, done, function() {
+				let textDiv = document.createElement( 'div' );
+				textDiv.textContent = 'Text.';
+				component.appendChild( textDiv );
+			});
+		});
+		
+		it('element removed', function( done ) {
+			runTest( true, done, function() {
+				component.removeChild( component.querySelector( '.box' ) );
+			});
+		});
+		
+		it('control test', function( done ) {
+			runTest( false, done, () => null );
+		});
+
+	});
+	
+	//TODO: add more tests where the resize-element contains webcomponent children
+
+});
+</script>
+	</body>
+</html>
