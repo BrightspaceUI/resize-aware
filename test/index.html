@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+		<title>d2l-resize-aware tests</title>
+		<script src="../../wct-browser-legacy/browser.js"></script>
+		<style>
+		  #subsuites {
+				height: 800px;
+				width: 800px;
+		  }
+		</style>
+	</head>
+	<body>
+		<script>
+		WCT.loadSuites([
+			'd2l-resize-aware.html?wc-shadydom=true&wc-ce=true',
+			'd2l-resize-aware.html?dom=shadow&lazyRegister=true&useNativeCSSProperties=true'
+		]);
+		</script>
+	</body>
+</html>

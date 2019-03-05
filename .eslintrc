@@ -1,0 +1,14 @@
+{
+	"extends": "brightspace/browser-config",
+	"rules": {
+		"keyword-spacing": 0,
+		"space-in-parens": 0,
+		"no-trailing-spaces": 0
+	},
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"globals": {
+		"Map": true
+	}
+}
