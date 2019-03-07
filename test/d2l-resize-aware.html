@@ -28,30 +28,29 @@
 			</template>
 		</test-fixture>
 		<script type="module">
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 describe('<d2l-resize-aware>', function() {
 
 	let resizeEventFired = false;
 	let component;
 	
 	const runTest = function( expectEvent, done, action ) {
-		component.addEventListener( 'd2l-resize-aware-resized', function() {
-			resizeEventFired = true;
+		resizeEventFired = false;
+		action();
+		afterNextRender( component, function() {
+			assert.equal( !!resizeEventFired, !!expectEvent );
+			done();
 		});
-		
-		setTimeout( function() {
-			resizeEventFired = false;
-			action();
-			setTimeout( function() {
-				assert.equal( !!resizeEventFired, !!expectEvent );
-				done();
-			}, 250 );
-		}, 0 );
 	};
 
 	describe('contains native HTML elements', function() {
 
-		beforeEach(function() {
+		beforeEach(function(done) {
 			component = fixture('NativeElementsFixture');
+			component.addEventListener( 'd2l-resize-aware-resized', function() {
+				resizeEventFired = true;
+			});
+			afterNextRender(component,done);
 		});
 
 		it('element resized', function( done ) {
