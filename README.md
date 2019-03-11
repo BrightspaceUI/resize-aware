@@ -28,7 +28,8 @@ The latest version of all major browsers (including Internet Explorer) are suppo
 
 There are 3 different implemenations that will be used depending on the browser, plus an additional workaround for Safari:
   - **Browser natively supports ResizeObserver _(Chrome, Chromium)_**  
-    Simply use the native ResizeObserver.
+    ~Simply use the native ResizeObserver.~  
+	Due to a bug ( [#4](https://github.com/BrightspaceUI/resize-aware/issues/4) ) in Chrome's implementation of `ResizeObserver`, it currently uses the same fallback as Firefox and Safari.
   - **Browser supports neither ResizeObserver nor native Shadow DOM, using the Shady DOM polyfill instead _(Edge, IE11)_**  
     Uses a single MutationObserver plus a `resize` and `transitionend` event handler on the window, and relies on the shady DOM polyfill to detect changes in the shady DOM of child webcomponents
   - **Browser supports native Shadow DOM, but not ResizeObserver _(Firefox, Safari)_**  
