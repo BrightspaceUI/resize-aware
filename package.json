@@ -7,7 +7,8 @@
 		"serve:public": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
 		"serve": "polymer serve",
 		"lint": "eslint *.js",
-		"test": "polymer test --skip-plugin sauce"
+		"test": "npm run lint && polymer test --skip-plugin sauce",
+		"test:ci": "npm run lint && polymer test --skip-plugin local"
 	},
 	"author": "D2L Corporation",
 	"dependencies": {

@@ -40,9 +40,15 @@ class D2LResizeAware extends PolymerElement {
 	constructor() {
 		super();
 		
-		this._hasNativeResizeObserver =
-			window.ResizeObserver &&
-			window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
+		/*
+		Chrome is currently the only browser to support ResizeObserver, however their
+		implementation is broken and does not detect resizes that occur as a result
+		of removing an element from the DOM. Until this is fixed, we cannot rely on
+		the native ResizeObserver to function correctly.
+		*/
+		this._hasNativeResizeObserver = false;
+			//window.ResizeObserver &&
+			//window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
 		
 		this._isSafari =
 			window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
