@@ -1,0 +1,18 @@
+language: node_js
+node_js: node
+addons:
+  chrome: stable
+script:
+- |
+  if [ $TRAVIS_PULL_REQUEST != false ] && [ $TRAVIS_SECURE_ENV_VARS == true ]; then
+    echo "Pull request with secure environment variables, running Sauce tests...";
+    npm run test:ci || travis_terminate 1;
+  else
+    echo "Not a pull request and/or no secure environment variables, running headless tests...";
+    npm run test || travis_terminate 1;
+  fi
+env:
+  global:
+  - SAUCE_USERNAME: team_mango
+  # SAUCE_ACCESS_KEY
+  - secure: "ykFH7Vxr8vk23Oi9cYg6lsknJCM2d91BsQbVyMW2nxExIzWKr+uKfWL1W6O4f63slFGdf+uYVLIOjKtQDZQqVUaR6r87PiU2NUwVg+BOSv4IihPtJ2fs0kz3aPdIXBeEc+oZYhk+Kc870yLh00cYNMLL0EnhKglc1Zihjx180fx9DH2h/AI2DBRMTC3X1jJwEz23kKXos/0JzPVRnPeg4O35/Vri4nP0EoLfVhMH5Cr09hRBHYKamlTTI5fsr75CdqEqQ1uY4NpoUtlb/cT7H5HT2pdA8XzFcjDOEi1nXXLl0dEfWw20MOIuGVfvltL54ANMUgicVOI4QHZa/S+DqlvpSwnlOrZwmiNpzMPOjLf/GldAY0q2X8h79NNxeutnzbOrOLUwPFXveuZAtFfP/v6egk2ox5GahyXuyINhNeXrKRKOZU3dAXiUMRUvlHej6mH63yywV9VE8Gb/GITi0nvwSrGcYyXLLHWO46bJAuZBjdcFbb52COn3xnt2fKLTw3fPSabO8X1c4Me8Oc0psHj9J0G9rMn6UGS/YQFn03CN/LZEzO4GZ+eFy7N4aqNJSOLjDN71kNgyrL/5FC+uJ5aCjX9hcYWJ1Fw1LV6oPGJzXbyFEpJ/UUHdnZi7zG4hwP8GRHB9uauaZ/NU5nXAjL5YT1U2TkGW3X/AJk69iyU="
