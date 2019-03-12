@@ -80,7 +80,9 @@ describe('<d2l-resize-aware>', function() {
 			component.addEventListener( 'd2l-resize-aware-resized', function() {
 				resizeEventFired = true;
 			});
-			afterNextRender(component,done);
+			afterNextRender(component, () => {
+				afterNextRender(component,done);
+			});
 		};
 	};
 
