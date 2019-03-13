@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
-import D2LResizeObserver from './d2l-resize-observer.js';
+import { ExtendedResizeObserver } from './internal/d2l-resize-observer.js';
 
 class D2LResizeAware extends PolymerElement {
 	
@@ -29,8 +29,6 @@ class D2LResizeAware extends PolymerElement {
 			},
 			
 			_hasNativeResizeObserver: Boolean,
-			_isSafari: Boolean,
-			_usingSafariWorkaround: Boolean,
 			_lastSize: Object,
 			_observer: Object
 		};
@@ -76,12 +74,7 @@ class D2LResizeAware extends PolymerElement {
 			this._observer = new window.ResizeObserver( this._onPossibleResize );
 		} else {
 			/* Use polyfill */
-			const checkIfSafariWorkaroundIsRequired = function( hasTextArea ) {
-				if( !this._isSafari ) return;
-				this._changeSafariWorkaroundStatus( hasTextArea );
-			}.bind( this );
-			
-			this._observer = new D2LResizeObserver( this._onPossibleResize, this.positionAware, checkIfSafariWorkaroundIsRequired );
+			this._observer = new ExtendedResizeObserver( this._onPossibleResize, this.positionAware );
 		}
 		this._observer.observe( this );
 	}
@@ -115,33 +108,6 @@ class D2LResizeAware extends PolymerElement {
 			)
 		);
 		this._lastSize = newSize;
-	}
-	
-	_changeSafariWorkaroundStatus( useWorkaround ) {
-		if( this._usingSafariWorkaround === !!useWorkaround ) {
-			return;
-		}
-		
-		/* Safari's MutationObserver does not detect resizes on native textareas
-		 * that occur as a result of the user dragging the resizer, so we just
-		 * have to poll for changes in this case, but only on frames where the
-		 * user could be resizing the textbox. Putting a mousemove event
-		 * listener on this element won't work because the textbox lags behind
-		 * the cursor, but we can at least only do a resize check when the mouse
-		 * is moving instead of on every frame.
-		 *
-		 * This workaround is only used if there is a textarea element somewhere
-		 * inside this element that does not have 'resize: none' in its styling,
-		 * and only if the browser is Safari.
-		 */
-		if( useWorkaround ) {
-			window.addEventListener( 'mousemove', this._onPossibleResize );
-			window.addEventListener( 'touchmove', this._onPossibleResize );
-		} else {
-			window.removeEventListener( 'mousemove', this._onPossibleResize );
-			window.removeEventListener( 'touchmove', this._onPossibleResize );
-		}
-		this._usingSafariWorkaround = !!useWorkaround;
 	}
 	
 }
