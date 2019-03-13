@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
-import { ExtendedResizeObserver } from './d2l-resize-observer.js';
+import { ExtendedResizeObserver } from './internal/d2l-resize-observer.js';
 
 class D2LResizeAware extends PolymerElement {
 	
