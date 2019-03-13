@@ -4,11 +4,11 @@ Contains a polyfill for `ResizeObserver` that is able to detect changes inside o
 
 ### Polyfill
 To use the polyfill, simply import `resize-observer-polyfill.js` into the page:
-```
+```javascript
 import 'd2l-resize-aware/resize-observer-polyfill.js';
 ```
 or
-```
+```html
 <script type="module" src="d2l-resize-aware/resize-observer-polyfill.js"></script>
 ```
 
