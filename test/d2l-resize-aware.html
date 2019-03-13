@@ -236,9 +236,7 @@ describe('<d2l-resize-aware>', function() {
 		
 		it('component moved', function( done ) {
 			runTest( true, done, function() {
-				console.info( component.getBoundingClientRect().x );
 				root.querySelector( '.spacer' ).style.width = '100px';
-				console.info( component.getBoundingClientRect().x );
 			});
 		});
 		
