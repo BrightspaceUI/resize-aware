@@ -11,6 +11,7 @@
 		"test:ci": "npm run lint && polymer test --skip-plugin local"
 	},
 	"author": "D2L Corporation",
+	"license": "Apache-2.0",
 	"dependencies": {
 		"@polymer/polymer": "^3.0.0"
 	},
