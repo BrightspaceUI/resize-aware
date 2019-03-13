@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
-import ShadowMutationObserver from './shadow-mutation-observer.js';
+import D2LResizeObserver from './d2l-resize-observer.js';
 
 class D2LResizeAware extends PolymerElement {
 	
@@ -29,11 +29,10 @@ class D2LResizeAware extends PolymerElement {
 			},
 			
 			_hasNativeResizeObserver: Boolean,
-			_usingShadyDomPolyfill: Boolean,
 			_isSafari: Boolean,
 			_usingSafariWorkaround: Boolean,
-			_destructor: Function,
-			_lastSize: Object
+			_lastSize: Object,
+			_observer: Object
 		};
 	}
 	
@@ -48,13 +47,7 @@ class D2LResizeAware extends PolymerElement {
 			window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
 			window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
 			
-		this._destructor = null;
 		this._onPossibleResize = this._onPossibleResize.bind( this );
-	}
-	
-	ready() {
-		super.ready();
-		this._usingShadyDomPolyfill = !!this.__shady;
 	}
 	
 	connectedCallback() {
@@ -65,84 +58,32 @@ class D2LResizeAware extends PolymerElement {
 	}
 	
 	disconnectedCallback() {
-		if( this._destructor ) {
-			this._destructor();
-			this._destructor = null;
+		if( this._observer ) {
+			this._observer.unobserve( this );
+			this._observer = null;
 		}
 		super.disconnectedCallback();
 	}
 	
 	_initialize() {
-		if( this._destructor ) {
-			this._destructor();
-			this._destructor = null;
+		if( this._observer ) {
+			return;
 		}
 		
 		this._usingSafariWorkaround = false;
-		if( this._hasNativeResizeObserver ) {
+		if( this._hasNativeResizeObserver && !this.positionAware ) {
 			/* Use native ResizeObserver */
-			const observer = new window.ResizeObserver( this._onPossibleResize );
-			observer.observe( this );
-			this._destructor = observer.unobserve.bind( observer, this );
-		} else if ( this._usingShadyDomPolyfill ) {
-			/* Use a mutation observer and rely on the Shady DOM polyfill to make it work */
-			const callback = this._onPossibleResize;
-			window.addEventListener( 'resize', callback );
-			document.addEventListener( 'transitionend', callback );
-			
-			const mutationObserver = new MutationObserver( callback );
-			mutationObserver.observe( this, {
-				attributes: true,
-				childList: true,
-				characterData: true,
-				subtree: true
-			});
-			
-			this._destructor = function() {
-				window.removeEventListener( 'resize', callback );
-				document.removeEventListener( 'transitionend', callback );
-				mutationObserver.disconnect();
-			}.bind( this );
+			this._observer = new window.ResizeObserver( this._onPossibleResize );
 		} else {
-			/* Monitor all webcomponents in the subtree for changes */
-			const callback = this._onPossibleResize;
-			window.addEventListener( 'resize', callback );
-			document.addEventListener( 'transitionend', callback );
-			
-			let mutationObservers = [];
-			const checkIfSafariWorkaroundIsRequired = function() {
+			/* Use polyfill */
+			const checkIfSafariWorkaroundIsRequired = function( hasTextArea ) {
 				if( !this._isSafari ) return;
-				this._changeSafariWorkaroundStatus(
-					mutationObservers.some( o => o.hasTextarea )
-				);
+				this._changeSafariWorkaroundStatus( hasTextArea );
 			}.bind( this );
 			
-			const onSlotChanged = function() {
-				mutationObservers.forEach( observer => observer.destroy() );
-				
-				mutationObservers = this.$.slot.assignedNodes({ flatten: true }).map( child => {
-					const shadowObserver = new ShadowMutationObserver( child, callback );
-					shadowObserver.onHasTextareaChanged = checkIfSafariWorkaroundIsRequired.bind( this );
-					shadowObserver.onTransitionEnd = callback;
-					return shadowObserver;
-				});
-				
-				this._onPossibleResize();
-				checkIfSafariWorkaroundIsRequired();
-			}.bind( this );
-			
-			this.$.slot.addEventListener( 'slotchange', onSlotChanged );
-			onSlotChanged(); // Safari needs this
-			
-			this._destructor = function() {
-				window.removeEventListener( 'resize', callback );
-				document.removeEventListener( 'transitionend', callback );
-				this.$.slot.removeEventListener( 'slotchange', onSlotChanged );
-				mutationObservers.forEach( observer => observer.destroy() );
-			}.bind( this );
+			this._observer = new D2LResizeObserver( this._onPossibleResize, this.positionAware, checkIfSafariWorkaroundIsRequired );
 		}
-		
-		this._onPossibleResize();
+		this._observer.observe( this );
 	}
 	
 	_onPossibleResize() {
@@ -151,8 +92,8 @@ class D2LResizeAware extends PolymerElement {
 			newSize.width !== this._lastSize.width ||
 			newSize.height !== this._lastSize.height ||
 			this.positionAware && (
-				newSize.x !== this._lastSize.x ||
-				newSize.y !== this._lastSize.y
+				newSize.left !== this._lastSize.left ||
+				newSize.top !== this._lastSize.top
 			)
 		) {
 			this._onResize();
