@@ -11,11 +11,8 @@ const _isSafari =
 	
 /* Safari's MutationObserver does not detect resizes on native textareas
  * that occur as a result of the user dragging the resizer, so we just
- * have to poll for changes in this case, but only on frames where the
- * user could be resizing the textbox. Putting a mousemove event
- * listener on this element won't work because the textbox lags behind
- * the cursor, but we can at least only do a resize check when the mouse
- * is moving instead of on every frame.
+ * have to poll for changes in this case, But we can at least only do a
+ * resize check when the mouse is moving instead of on every frame.
  *
  * This workaround is only used if there is a textarea element somewhere
  * on the page that does not have 'resize: none' in its styling, and only
