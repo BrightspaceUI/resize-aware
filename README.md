@@ -28,7 +28,7 @@ The latest version of all major browsers (including Internet Explorer) are suppo
 
 There are 3 different implemenations that will be used depending on the browser, plus an additional workaround for Safari:
   - **Browser natively supports ResizeObserver _(Chrome, Chromium)_**  
-    Simply use the native ResizeObserver.
+    Simply use the native ResizeObserver, unless `position-aware` is specified, in which case use the 3rd implementation
   - **Browser supports neither ResizeObserver nor native Shadow DOM, using the Shady DOM polyfill instead _(Edge, IE11)_**  
     Uses a single MutationObserver plus a `resize` and `transitionend` event handler on the window, and relies on the shady DOM polyfill to detect changes in the shady DOM of child webcomponents
   - **Browser supports native Shadow DOM, but not ResizeObserver _(Firefox, Safari)_**  

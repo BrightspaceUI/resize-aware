@@ -17,6 +17,10 @@
 				width: 200px;
 				height: 50px;
 			}
+			
+			.spacer {
+				display: inline-block;
+			}
 		</style>
 	</head>
 	<body>
@@ -54,6 +58,15 @@
 			</template>
 		</test-fixture>
 		
+		<test-fixture id="PositionAware">
+			<template strip-whitespace>
+				<div>
+					<div class="spacer"></div>
+					<d2l-resize-aware position-aware></d2l-resize-aware>
+				</div>
+			</template>
+		</test-fixture>
+		
 		<script type="module">
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import SimpleTestComponents from './test-component-simple.js';
@@ -64,6 +77,7 @@ describe('<d2l-resize-aware>', function() {
 
 	let resizeEventFired = false;
 	let component;
+	let root;
 	
 	const runTest = function( expectEvent, done, action ) {
 		resizeEventFired = false;
@@ -76,7 +90,12 @@ describe('<d2l-resize-aware>', function() {
 	
 	const setup = function( testFixture ) {
 		return function(done) {
-			component = fixture( testFixture );
+			root = fixture( testFixture );
+			if( root.tagName === 'D2L-RESIZE-AWARE' ) {
+				component = root;
+			} else {
+				component = root.querySelector( 'd2l-resize-aware' );
+			}
 			component.addEventListener( 'd2l-resize-aware-resized', function() {
 				resizeEventFired = true;
 			});
@@ -107,6 +126,13 @@ describe('<d2l-resize-aware>', function() {
 		it('element removed', function( done ) {
 			runTest( true, done, function() {
 				component.removeChild( component.querySelector( '.box' ) );
+			});
+		});
+		
+		it('resizer itself changed', function( done ) {
+			runTest( true, done, function() {
+				component.style.display = 'block';
+				component.style.width = '600px';
 			});
 		});
 		
@@ -195,6 +221,24 @@ describe('<d2l-resize-aware>', function() {
 					assert.equal( !!resizeEventFired, true );
 					done();
 				});
+			});
+		});
+		
+		it('control test', function( done ) {
+			runTest( false, done, () => null );
+		});
+
+	});
+	
+	describe('position aware', function() {
+
+		beforeEach( setup( 'PositionAware' ) );
+		
+		it('component moved', function( done ) {
+			runTest( true, done, function() {
+				console.info( component.getBoundingClientRect().x );
+				root.querySelector( '.spacer' ).style.width = '100px';
+				console.info( component.getBoundingClientRect().x );
 			});
 		});
 		
