@@ -92,7 +92,7 @@ const lazyInit = function() {
 		initShadyObserver();
 	} else {
 		initShadowObserver();
-	};
+	}
 };
 
 const addListener = function( node, observer ) {
@@ -110,7 +110,7 @@ const addListener = function( node, observer ) {
 };
 
 const removeListener = function( node, observer ) {
-	let watchedNode = _watchedNodes.get( node );
+	const watchedNode = _watchedNodes.get( node );
 	if( watchedNode ) {
 		watchedNode.observers.delete( observer );
 		if( watchedNode.observers.size <= 0 ) {
