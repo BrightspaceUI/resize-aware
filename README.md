@@ -1,6 +1,19 @@
 # resize-aware
-A Polymer 3 compatible solution to reacting to changes in an element's size and/or position. This component is able to detect changes inside of webcomponents on all supported browsers (Firefox, Chrome/Chromium, Edge, IE11, and Safari).
+A Polymer 3 compatible solution to reacting to changes in an element's size and/or position.  
+Contains a polyfill for `ResizeObserver` that is able to detect changes inside of webcomponents on all supported browsers (Firefox, Chrome/Chromium, Edge, IE11, and Safari).  
 
+### Polyfill
+To use the polyfill, simply import `resize-observer-polyfill.js` into the page:
+```
+import 'd2l-resize-aware/resize-observer-polyfill.js';
+```
+or
+```
+<script type="module" src="d2l-resize-aware/resize-observer-polyfill.js"></script>
+```
+
+### Web Component
+This repo also includes a webcomponent implementing the polyfill for convenience:
 ```html
 <d2l-resize-aware>
   ...
