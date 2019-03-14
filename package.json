@@ -1,6 +1,6 @@
 {
 	"name": "d2l-resize-aware",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "A Polymer 3 compatible ResizeObserver polyfill and utility component",
 	"main": "d2l-resize-aware.js",
 	"scripts": {

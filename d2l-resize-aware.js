@@ -1,6 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { ExtendedResizeObserver } from './internal/d2l-resize-observer.js';
+import hasNativeResizeObserver from './internal/has-native-resize-observer.js';
 
 class D2LResizeAware extends PolymerElement {
 	
@@ -28,7 +29,6 @@ class D2LResizeAware extends PolymerElement {
 				value: false
 			},
 			
-			_hasNativeResizeObserver: Boolean,
 			_lastSize: Object,
 			_observer: Object
 		};
@@ -36,11 +36,6 @@ class D2LResizeAware extends PolymerElement {
 	
 	constructor() {
 		super();
-		
-		this._hasNativeResizeObserver =
-			window.ResizeObserver &&
-			/^\s*function ResizeObserver\(\) \{\s+\[native code\]\s+\}\s*$/.test( window.ResizeObserver.toString() );
-		
 		this._onPossibleResize = this._onPossibleResize.bind( this );
 	}
 	
@@ -65,7 +60,7 @@ class D2LResizeAware extends PolymerElement {
 		}
 		
 		this._usingSafariWorkaround = false;
-		if( this._hasNativeResizeObserver && !this.positionAware ) {
+		if( hasNativeResizeObserver && !this.positionAware ) {
 			/* Use native ResizeObserver */
 			this._observer = new window.ResizeObserver( this._onPossibleResize );
 		} else {

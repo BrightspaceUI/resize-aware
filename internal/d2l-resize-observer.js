@@ -1,4 +1,5 @@
 import ShadowMutationObserver from './shadow-mutation-observer.js';
+import hasNativeResizeObserver from './has-native-resize-observer.js';
 
 let _shadyObserver = null;
 let _shadowObserver = null;
@@ -201,6 +202,34 @@ class ExtendedResizeObserver extends ResizeObserverPolyfill {
 	constructor( callback, positionAware ) {
 		super( callback );
 		this.__positionAware = !!positionAware;
+		if( hasNativeResizeObserver && positionAware ) {
+			// The native ResizeObserver can detect some resizes that the polyfill cannot,
+			// but it fails to detect some position changes that the polyfill does detect.
+			// To get the best of both worlds, also make use of the native ResizeObserver
+			// if the browser supports it.
+			this.__nativeObserver = new window.ResizeObserver( onPossibleResize );
+		}
+	}
+	
+	observe( node ) {
+		super.observe( node );
+		if( this.__nativeObserver ) {
+			this.__nativeObserver.observe( node );
+		}
+	}
+	
+	unobserve( node ) {
+		super.unobserve( node );
+		if( this.__nativeObserver ) {
+			this.__nativeObserver.unobserve( node );
+		}
+	}
+	
+	disconnect( node ) {
+		super.disconnect();
+		if( this.__nativeObserver ) {
+			this.__nativeObserver.disconnect();
+		}
 	}
 	
 }
