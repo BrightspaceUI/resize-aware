@@ -38,12 +38,13 @@ const getContentRect = function( node ) {
 		return rect;
 	}
 	
+	const resolvedStyle = window.getComputedStyle( node );
 	if( window.DOMRect ) {
 		const rect = new DOMRect(
-			node.clientLeft,
-			node.clientTop,
-			node.clientWidth,
-			node.clientHeight
+			parseFloat( resolvedStyle['padding-left'] ) || 0,
+			parseFloat( resolvedStyle['padding-top'] ) || 0,
+			parseFloat( resolvedStyle.width ) || 0,
+			parseFloat( resolvedStyle.height ) || 0
 		);
 		
 		if( window.DOMRectReadOnly && DOMRectReadOnly.fromRect ) {
@@ -54,10 +55,10 @@ const getContentRect = function( node ) {
 	}
 	
 	return new DOMRectPolyfill(
-		node.clientLeft,
-		node.clientTop,
-		node.clientWidth,
-		node.clientHeight
+		parseFloat( resolvedStyle['padding-left'] ) || 0,
+		parseFloat( resolvedStyle['padding-top'] ) || 0,
+		parseFloat( resolvedStyle.width ) || 0,
+		parseFloat( resolvedStyle.height ) || 0
 	);
 };
 
