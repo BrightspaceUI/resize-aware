@@ -10,6 +10,70 @@ const _isSafari =
 	window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
 	window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
 	
+class DOMRectPolyfill {
+	
+	constructor( x, y, width, height ) {
+		this.__x = x;
+		this.__y = y;
+		this.__width = width;
+		this.__height = height;
+	}
+	
+	get x() { return this.__x; }
+	get y() { return this.__y; }
+	get left() { return this.__x; }
+	get top() { return this.__y; }
+	get width() { return this.__width; }
+	get height() { return this.__height; }
+	get right() { return this.__x + this.__width; }
+	get bottom() { return this.__y + this.__height; }
+}
+	
+const getContentRect = function( node ) {
+	if( window.SVGGraphicsElement && node instanceof SVGGraphicsElement ) {
+		const rect = node.getBBox();
+		if( window.DOMRectReadOnly && DOMRectReadOnly.fromRect ) {
+			return DOMRectReadOnly.fromRect( rect );
+		}
+		return rect;
+	}
+	
+	const resolvedStyle = window.getComputedStyle( node );
+	if( window.DOMRect ) {
+		const rect = new DOMRect(
+			parseFloat( resolvedStyle['padding-left'] ) || 0,
+			parseFloat( resolvedStyle['padding-top'] ) || 0,
+			parseFloat( resolvedStyle.width ) || 0,
+			parseFloat( resolvedStyle.height ) || 0
+		);
+		
+		if( window.DOMRectReadOnly && DOMRectReadOnly.fromRect ) {
+			return DOMRectReadOnly.fromRect( rect );
+		}
+		
+		return rect;
+	}
+	
+	return new DOMRectPolyfill(
+		parseFloat( resolvedStyle['padding-left'] ) || 0,
+		parseFloat( resolvedStyle['padding-top'] ) || 0,
+		parseFloat( resolvedStyle.width ) || 0,
+		parseFloat( resolvedStyle.height ) || 0
+	);
+};
+
+const getSize = function( node, fullBoundingBox ) {
+	if( !fullBoundingBox ) {
+		return getContentRect( node );
+	}
+	
+	const rect = node.getBoundingClientRect();
+	if( window.DOMRectReadOnly && DOMRectReadOnly.fromRect ) {
+		return DOMRectReadOnly.fromRect( rect );
+	}
+	return rect;
+};
+	
 /* Safari's MutationObserver does not detect resizes on native textareas
  * that occur as a result of the user dragging the resizer, so we just
  * have to poll for changes in this case, But we can at least only do a
@@ -53,21 +117,31 @@ const destroy = function() {
 const onPossibleResize = function() {
 	const observerMap = new Map();
 	_watchedNodes.forEach( ( nodeInfo, node ) => {
-		const newSize = node.getBoundingClientRect();
-		const lastSize = nodeInfo.lastSize;
-		nodeInfo.lastSize = newSize;
-		const sizeChanged = ( newSize.width !== lastSize.width || newSize.height !== lastSize.height );
-		const posnChanged = ( newSize.left !== lastSize.left || newSize.top !== lastSize.top );
+		const newContentSize = getSize( node, false );
+		const newBoundingClientSize = getSize( node, true );
+		const lastContentSize = nodeInfo.lastContentSize;
+		const lastBoundingClientSize = nodeInfo.lastBoundingClientSize;
+		nodeInfo.lastContentSize = newContentSize;
+		nodeInfo.lastBoundingClientSize = newBoundingClientSize;
 		
-		if( !sizeChanged && !posnChanged ) {
+		const contentSizeChanged = ( newContentSize.width !== lastContentSize.width || newContentSize.height !== lastContentSize.height );
+		const boundingClientSizeChanged = ( newBoundingClientSize.width !== lastBoundingClientSize.width || newBoundingClientSize.height !== lastBoundingClientSize.height );
+		const posnChanged = ( newBoundingClientSize.left !== lastBoundingClientSize.left || newBoundingClientSize.top !== lastBoundingClientSize.top );
+		
+		if( !contentSizeChanged && !boundingClientSizeChanged && !posnChanged ) {
 			return;
 		}
 		
 		nodeInfo.observers.forEach( observer => {
-			if( sizeChanged || observer.__positionAware !== false ) {
+			if(
+				(contentSizeChanged && !observer.__fullBoundingBox) ||
+				(boundingClientSizeChanged && observer.__fullBoundingBox) ||
+				(posnChanged && observer.__positionAware !== false)
+			) {
 				const resizeEntry = new ResizeObserverEntryPolyfill();
 				resizeEntry.__target = node;
-				resizeEntry.__contentRect = newSize;
+				resizeEntry.__contentRect = newContentSize;
+				resizeEntry.__boundingBox = newBoundingClientSize;
 				
 				if( observerMap.has( observer ) ) {
 					observerMap.get( observer ).push( resizeEntry );
@@ -135,7 +209,8 @@ const addListener = function( node, observer ) {
 		watchedNode.observers.add( observer );
 	} else {
 		watchedNode = {
-			lastSize: node.getBoundingClientRect(),
+			lastContentSize: getSize( node, false ),
+			lastBoundingClientSize: getSize( node, true ),
 			observers: new Set()
 		};
 		watchedNode.observers.add( observer );
@@ -159,6 +234,9 @@ const removeListener = function( node, observer ) {
 class ResizeObserverEntryPolyfill {
 	get contentRect() { return this.__contentRect; }
 	get target() { return this.__target; }
+	
+	// extension
+	get boundingBox() { return this.__boundingBox; }
 }
 
 class ResizeObserverPolyfill {
@@ -166,6 +244,7 @@ class ResizeObserverPolyfill {
 	constructor( callback ) {
 		this.__callback = callback;
 		this.__watchedElements = new Set();
+		this.__fullBoundingBox = false;
 	}
 	
 	observe( node ) {
@@ -178,7 +257,7 @@ class ResizeObserverPolyfill {
 		addListener( node, this );
 		const resizeEntry = new ResizeObserverEntryPolyfill();
 		resizeEntry.__target = node;
-		resizeEntry.__contentRect = node.getBoundingClientRect();
+		resizeEntry.__contentRect = getSize( node, this.__fullBoundingBox );
 		this.__callback( [resizeEntry] );
 	}
 	
@@ -199,10 +278,11 @@ class ResizeObserverPolyfill {
 
 class ExtendedResizeObserver extends ResizeObserverPolyfill {
 	
-	constructor( callback, positionAware ) {
+	constructor( callback, positionAware, boundingBox ) {
 		super( callback );
 		this.__positionAware = !!positionAware;
-		if( hasNativeResizeObserver && positionAware ) {
+		this.__fullBoundingBox = !!boundingBox;
+		if( hasNativeResizeObserver ) {
 			// The native ResizeObserver can detect some resizes that the polyfill cannot,
 			// but it fails to detect some position changes that the polyfill does detect.
 			// To get the best of both worlds, also make use of the native ResizeObserver
