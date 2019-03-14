@@ -3,6 +3,8 @@ A Polymer 3 compatible solution to reacting to changes in an element's size and/
 Contains a polyfill for `ResizeObserver` that is able to detect changes inside of webcomponents on all supported browsers (Firefox, Chrome/Chromium, Edge, IE11, and Safari).  
 
 ### Polyfill
+
+#### Global Polyfill
 To use the polyfill, simply import `resize-observer-polyfill.js` into the page:
 ```javascript
 import 'd2l-resize-aware/resize-observer-polyfill.js';
@@ -10,6 +12,17 @@ import 'd2l-resize-aware/resize-observer-polyfill.js';
 or
 ```html
 <script type="module" src="d2l-resize-aware/resize-observer-polyfill.js"></script>
+```
+
+#### Module Import
+Alternatively, if you do not wish to alter or define `window.ResizeObserver`, you can instead import the polyfill as an es6 module:
+```javascript
+import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js';
+```
+
+Additionally, a separate class is provided that is capable to detecting changes in position as well as size:
+```javascript
+import { BoundingBoxObserver } from 'd2l-resize-aware/resize-observer-module.js';
 ```
 
 ### Web Component
@@ -51,5 +64,6 @@ Safari has a browser bug that prevents the resizing of a textarea using the nati
 
 ### Limitations
 
-The polyfill and component are unable to detect changes in position or size that occur as a result of CSS pseudo-class styling (eg. `:hover`) unless said syling has a transition.
-
+The polyfill and component are unable to detect changes in position or size that occur as a result of CSS pseudo-class styling (eg. `:hover`) unless said syling has a transition.  
+  
+If the browser natively supports `ResizeObserver`, the `BoundingBoxObserver` class will use both the native ResizeObserver and the polyfill together to cover each other's limitations. A CSS pseudo-class that causes another element to move but not change size will still not be detected, however, as neither the native implementation nor the polyfill can handle this case.
