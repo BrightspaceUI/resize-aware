@@ -48,3 +48,8 @@ There are 3 different implemenations that will be used depending on the browser,
     Like above, but also recursively adds a MutationObserver and `transitionend` event listener to the shadow root of all webcomponents so that changes within the shadow DOM of webcomponents can be detected. As webcomponents are added and removed, the tree of mutation observers is automatically updated.
 
 Safari has a browser bug that prevents the resizing of a textarea using the native resize handle from being detected by mutation observers. To work around this bug, if the browser is detected as Safari, and a textarea element whose `resize` styling does not resolve to `none` (that is, it has a drag handle) is found on the page, this component will poll for changes in size whenever the mouse is moving or a moving touch event occurs. 
+
+### Limitations
+
+The polyfill and component are unable to detect changes in position or size that occur as a result of CSS pseudo-class styling (eg. `:hover`) unless said syling has a transition.
+
