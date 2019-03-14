@@ -65,7 +65,7 @@ class D2LResizeAware extends PolymerElement {
 			this._observer = new window.ResizeObserver( this._onPossibleResize );
 		} else {
 			/* Use polyfill */
-			this._observer = new ExtendedResizeObserver( this._onPossibleResize, this.positionAware );
+			this._observer = new ExtendedResizeObserver( this._onPossibleResize, this.positionAware, true );
 		}
 		this._observer.observe( this );
 	}

@@ -5,7 +5,7 @@ const ResizeObserverExport = hasNativeResizeObserver ? window.ResizeObserver : R
 
 class BoundingBoxObserver extends ExtendedResizeObserver {
 	constructor( callback ) {
-		super( callback, true );
+		super( callback, true, true );
 	}
 }
 
