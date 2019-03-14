@@ -39,12 +39,8 @@ class D2LResizeAware extends PolymerElement {
 		
 		this._hasNativeResizeObserver =
 			window.ResizeObserver &&
-			window.ResizeObserver.toString().indexOf( '[native code]' ) >= 0;
+			/^\s*function ResizeObserver\(\) \{\s+\[native code\]\s+\}\s*$/.test( window.ResizeObserver.toString() );
 		
-		this._isSafari =
-			window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
-			window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
-			
 		this._onPossibleResize = this._onPossibleResize.bind( this );
 	}
 	
