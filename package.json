@@ -1,12 +1,12 @@
 {
 	"name": "d2l-resize-aware",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "A Polymer 3 compatible ResizeObserver polyfill and utility component",
 	"main": "d2l-resize-aware.js",
 	"scripts": {
 		"serve:public": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
 		"serve": "polymer serve",
-		"lint": "eslint *.js",
+		"lint": "eslint *.js && polymer lint --sources \"*.js\" \"internal/*.js\"",
 		"test": "npm run lint && polymer test --skip-plugin sauce",
 		"test:ci": "npm run lint && polymer test --skip-plugin local"
 	},

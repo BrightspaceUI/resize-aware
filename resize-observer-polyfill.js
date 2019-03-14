@@ -1,9 +1,7 @@
 import { ResizeObserverPolyfill, ResizeObserverEntryPolyfill } from './internal/d2l-resize-observer';
+import hasNativeResizeObserver from './internal/has-native-resize-observer.js';
 
-if(
-	!window.ResizeObserver ||
-	!/^\s*function ResizeObserver\(\) \{\s+\[native code\]\s+\}\s*$/.test( window.ResizeObserver.toString() )
-) {
+if( !hasNativeResizeObserver ) {
 	window.ResizeObserver = ResizeObserverPolyfill;
 	window.ResizeObserverEntry = ResizeObserverEntryPolyfill;
 }
