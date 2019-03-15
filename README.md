@@ -20,7 +20,7 @@ Alternatively, if you do not wish to alter or define `window.ResizeObserver`, yo
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js';
 ```
 
-Additionally, a separate class is provided that is capable to detecting changes in position as well as size:
+Additionally, a separate class is provided that is capable to detecting changes in position as well as size, and checks the client bounding box (as returned by `getBoundingClientRect()`) rather than its content box.
 ```javascript
 import { BoundingBoxObserver } from 'd2l-resize-aware/resize-observer-module.js';
 ```
