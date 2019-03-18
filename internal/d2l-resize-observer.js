@@ -1,5 +1,6 @@
 import ShadowMutationObserver from './shadow-mutation-observer.js';
 import hasNativeResizeObserver from './has-native-resize-observer.js';
+import { getNodeContentRect, getNodeClientBoundingBox } from './node-size.js';
 
 let _shadyObserver = null;
 let _shadowObserver = null;
@@ -9,70 +10,6 @@ const _watchedNodes = new Map();
 const _isSafari =
 	window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
 	window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
-	
-class DOMRectPolyfill {
-	
-	constructor( x, y, width, height ) {
-		this.__x = x;
-		this.__y = y;
-		this.__width = width;
-		this.__height = height;
-	}
-	
-	get x() { return this.__x; }
-	get y() { return this.__y; }
-	get left() { return this.__x; }
-	get top() { return this.__y; }
-	get width() { return this.__width; }
-	get height() { return this.__height; }
-	get right() { return this.__x + this.__width; }
-	get bottom() { return this.__y + this.__height; }
-}
-	
-const getContentRect = function( node ) {
-	if( window.SVGGraphicsElement && node instanceof SVGGraphicsElement ) {
-		const rect = node.getBBox();
-		if( window.DOMRectReadOnly && DOMRectReadOnly.fromRect ) {
-			return DOMRectReadOnly.fromRect( rect );
-		}
-		return rect;
-	}
-	
-	const resolvedStyle = window.getComputedStyle( node );
-	if( window.DOMRect ) {
-		const rect = new DOMRect(
-			parseFloat( resolvedStyle['padding-left'] ) || 0,
-			parseFloat( resolvedStyle['padding-top'] ) || 0,
-			parseFloat( resolvedStyle.width ) || 0,
-			parseFloat( resolvedStyle.height ) || 0
-		);
-		
-		if( window.DOMRectReadOnly && DOMRectReadOnly.fromRect ) {
-			return DOMRectReadOnly.fromRect( rect );
-		}
-		
-		return rect;
-	}
-	
-	return new DOMRectPolyfill(
-		parseFloat( resolvedStyle['padding-left'] ) || 0,
-		parseFloat( resolvedStyle['padding-top'] ) || 0,
-		parseFloat( resolvedStyle.width ) || 0,
-		parseFloat( resolvedStyle.height ) || 0
-	);
-};
-
-const getSize = function( node, fullBoundingBox ) {
-	if( !fullBoundingBox ) {
-		return getContentRect( node );
-	}
-	
-	const rect = node.getBoundingClientRect();
-	if( window.DOMRectReadOnly && DOMRectReadOnly.fromRect ) {
-		return DOMRectReadOnly.fromRect( rect );
-	}
-	return rect;
-};
 	
 /* Safari's MutationObserver does not detect resizes on native textareas
  * that occur as a result of the user dragging the resizer, so we just
@@ -117,8 +54,8 @@ const destroy = function() {
 const onPossibleResize = function() {
 	const observerMap = new Map();
 	_watchedNodes.forEach( ( nodeInfo, node ) => {
-		const newContentSize = getSize( node, false );
-		const newBoundingClientSize = getSize( node, true );
+		const newContentSize = getNodeContentRect( node );
+		const newBoundingClientSize = getNodeClientBoundingBox( node );
 		const lastContentSize = nodeInfo.lastContentSize;
 		const lastBoundingClientSize = nodeInfo.lastBoundingClientSize;
 		nodeInfo.lastContentSize = newContentSize;
@@ -208,8 +145,8 @@ const addListener = function( node, observer ) {
 		watchedNode.observers.add( observer );
 	} else {
 		watchedNode = {
-			lastContentSize: getSize( node, false ),
-			lastBoundingClientSize: getSize( node, true ),
+			lastContentSize: getNodeContentRect( node ),
+			lastBoundingClientSize: getNodeClientBoundingBox( node ),
 			observers: new Set()
 		};
 		watchedNode.observers.add( observer );
@@ -235,7 +172,7 @@ class ResizeObserverEntryPolyfill {
 	get target() { return this.__target; }
 	
 	// extension
-	get boundingBox() { return getSize( this.__target, true ); }
+	get boundingBox() { return getNodeClientBoundingBox( this.__target ); }
 }
 
 class ResizeObserverPolyfill {
@@ -256,7 +193,7 @@ class ResizeObserverPolyfill {
 		addListener( node, this );
 		const resizeEntry = new ResizeObserverEntryPolyfill();
 		resizeEntry.__target = node;
-		resizeEntry.__contentRect = getSize( node, false );
+		resizeEntry.__contentRect = getNodeContentRect( node );
 		this.__callback( [resizeEntry] );
 	}
 	
