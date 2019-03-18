@@ -141,7 +141,6 @@ const onPossibleResize = function() {
 				const resizeEntry = new ResizeObserverEntryPolyfill();
 				resizeEntry.__target = node;
 				resizeEntry.__contentRect = newContentSize;
-				resizeEntry.__boundingBox = newBoundingClientSize;
 				
 				if( observerMap.has( observer ) ) {
 					observerMap.get( observer ).push( resizeEntry );
@@ -236,7 +235,7 @@ class ResizeObserverEntryPolyfill {
 	get target() { return this.__target; }
 	
 	// extension
-	get boundingBox() { return this.__boundingBox; }
+	get boundingBox() { return getSize( this.__target, true ); }
 }
 
 class ResizeObserverPolyfill {
@@ -257,7 +256,7 @@ class ResizeObserverPolyfill {
 		addListener( node, this );
 		const resizeEntry = new ResizeObserverEntryPolyfill();
 		resizeEntry.__target = node;
-		resizeEntry.__contentRect = getSize( node, this.__fullBoundingBox );
+		resizeEntry.__contentRect = getSize( node, false );
 		this.__callback( [resizeEntry] );
 	}
 	
