@@ -4,25 +4,25 @@
 		<meta charset="utf-8">
 		<title>d2l-resize-aware demo</title>
 
-		<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-		<script type="module" src="../../d2l-inputs/d2l-input-textarea.js"></script>
+		<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+		<script type="module" src="/node_modules/@brightspace-ui/core/components/inputs/input-textarea.js"></script>
 		<script type="module" src="../d2l-resize-aware.js"></script>
-		
+
 		<style>
 			.bar {
 				display: inline-block;
 				height: 1em;
 				margin-right: 1ch;
 			}
-			
+
 			#height-bar {
 				background-color: red;
 			}
-			
+
 			#width-bar {
 				background-color: blue;
 			}
-			
+
 			d2l-input-textarea {
 				min-width: 100px;
 			}
@@ -42,15 +42,15 @@
 				<textarea>Resize me!</textarea>
 			</d2l-resize-aware>
 		</div>
-		
+
 		<script>
-			document.getElementById( 'resize-detector' ).addEventListener( 'd2l-resize-aware-resized', function( event ) {
+			document.getElementById('resize-detector').addEventListener('d2l-resize-aware-resized', function(event) {
 				var width = event.detail.current.width + 'px';
 				var height = event.detail.current.height + 'px';
-				document.getElementById( 'height-bar' ).style.width = height;
-				document.getElementById( 'height-text' ).textContent = height;
-				document.getElementById( 'width-bar' ).style.width = width;
-				document.getElementById( 'width-text' ).textContent = width;
+				document.getElementById('height-bar').style.width = height;
+				document.getElementById('height-text').textContent = height;
+				document.getElementById('width-bar').style.width = width;
+				document.getElementById('width-text').textContent = width;
 			});
 		</script>
 	</body>

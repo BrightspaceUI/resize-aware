@@ -3,11 +3,11 @@ import { PolymerElement, html } from '@polymer/polymer';
 const _testComponents = [];
 
 class SimpleTestComponent extends PolymerElement {
-	
+
 	static get is() {
 		return 'test-component-simple';
 	}
-	
+
 	static get template() {
 		const template = html`
 			<style>
@@ -22,30 +22,30 @@ class SimpleTestComponent extends PolymerElement {
 		template.setAttribute('strip-whitespace', true);
 		return template;
 	}
-	
+
 	static get properties() {
 		return {};
 	}
-	
+
 	connectedCallback() {
 		super.connectedCallback();
-		_testComponents.push( this );
+		_testComponents.push(this);
 	}
-	
+
 	disconnectedCallback() {
-		const i = _testComponents.indexOf( this );
-		if( i >= 0 ) {
-			_testComponents.splice( i, 1 );
+		const i = _testComponents.indexOf(this);
+		if (i >= 0) {
+			_testComponents.splice(i, 1);
 		}
 	}
-	
-	resizeDiv( width, height ) {
+
+	resizeDiv(width, height) {
 		this.$.div.style.width = width;
 		this.$.div.style.height = height;
 	}
-	
+
 }
 
-customElements.define( SimpleTestComponent.is, SimpleTestComponent );
+customElements.define(SimpleTestComponent.is, SimpleTestComponent);
 
 export default _testComponents;

@@ -1,12 +1,12 @@
 class DOMRectReadOnlyPolyfill {
-	
-	constructor( x, y, width, height ) {
+
+	constructor(x, y, width, height) {
 		this.__x = x;
 		this.__y = y;
 		this.__width = width;
 		this.__height = height;
 	}
-	
+
 	get x() { return this.__x; }
 	get y() { return this.__y; }
 	get left() { return this.__x; }
@@ -17,20 +17,20 @@ class DOMRectReadOnlyPolyfill {
 	get bottom() { return this.__y + this.__height; }
 }
 
-const toReadOnlyDOMRect = function( domRect ) {
-	if( window.DOMRectReadOnly && domRect instanceof DOMRectReadOnly ) {
+const toReadOnlyDOMRect = function(domRect) {
+	if (window.DOMRectReadOnly && domRect instanceof DOMRectReadOnly) {
 		return domRect;
 	}
-	
-	if(
+
+	if (
 		window.DOMRectReadOnly &&
 		DOMRectReadOnly.fromRect &&
 		domRect.x !== undefined &&
 		domRect.y !== undefined
 	) {
-		return DOMRectReadOnly.fromRect( domRect );
+		return DOMRectReadOnly.fromRect(domRect);
 	}
-	
+
 	return new DOMRectReadOnlyPolyfill(
 		domRect.left || domRect.x || 0,
 		domRect.top || domRect.y || 0,
@@ -39,12 +39,12 @@ const toReadOnlyDOMRect = function( domRect ) {
 	);
 };
 
-const getNodeContentRect = function( node ) {
-	if( window.SVGGraphicsElement && node instanceof SVGGraphicsElement ) {
-		return toReadOnlyDOMRect( node.getBBox() );
+const getNodeContentRect = function(node) {
+	if (window.SVGGraphicsElement && node instanceof SVGGraphicsElement) {
+		return toReadOnlyDOMRect(node.getBBox());
 	}
-	
-	const resolvedStyle = window.getComputedStyle( node );
+
+	const resolvedStyle = window.getComputedStyle(node);
 	return toReadOnlyDOMRect({
 		x: resolvedStyle['padding-left'] || 0,
 		y: resolvedStyle['padding-top'] || 0,
@@ -53,8 +53,8 @@ const getNodeContentRect = function( node ) {
 	});
 };
 
-const getNodeClientBoundingBox = function( node ) {
-	return toReadOnlyDOMRect( node.getBoundingClientRect() );
+const getNodeClientBoundingBox = function(node) {
+	return toReadOnlyDOMRect(node.getBoundingClientRect());
 };
 
 export {
