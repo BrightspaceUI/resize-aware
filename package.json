@@ -25,7 +25,7 @@
 		"d2l-inputs": "BrightspaceUI/inputs#semver:^2",
 		"polymer-cli": "^1.9.6",
 		"eslint": "^4.15.0",
-		"eslint-config-brightspace": "^0.4.0",
+		"eslint-config-brightspace": "^0.16.1",
 		"wct-browser-legacy": "^1.0.1"
 	}
 }
