@@ -11,7 +11,7 @@ class SlottedTestComponent extends PolymerElement {
 	}
 	
 	static get properties() {
-		return {}
+		return {};
 	}
 	
 }

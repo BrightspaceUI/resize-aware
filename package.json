@@ -6,9 +6,14 @@
 	"scripts": {
 		"serve:public": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
 		"serve": "polymer serve",
-		"lint": "eslint *.js && polymer lint --sources \"*.js\" \"internal/*.js\"",
-		"test": "npm run lint && polymer test --skip-plugin sauce",
-		"test:ci": "npm run lint && polymer test --skip-plugin local"
+		"lint": "npm run lint:eslint && npm run lint:polymer",
+		"lint:eslint": "eslint . --ext .js",
+		"lint:polymer": "polymer lint",
+		"format": "npm run format:eslint",
+		"format:eslint": "npm run lint:eslint -- --fix",
+		"test": "npm run lint && npm run test:local",
+		"test:sauce": "npm run lint && polymer test --skip-plugin sauce",
+		"test:local": "npm run lint && polymer test --skip-plugin local"
 	},
 	"author": "D2L Corporation",
 	"license": "Apache-2.0",
