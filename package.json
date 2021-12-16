@@ -11,8 +11,9 @@
 		"lint:polymer": "polymer lint",
 		"format": "npm run format:eslint",
 		"format:eslint": "npm run lint:eslint -- --fix",
-		"test": "npm run lint && polymer test --skip-plugin sauce",
-		"test:ci": "npm run lint && polymer test --skip-plugin local"
+		"test": "npm run lint && npm run test:local",
+		"test:sauce": "npm run lint && polymer test --skip-plugin sauce",
+		"test:local": "npm run lint && polymer test --skip-plugin local"
 	},
 	"author": "D2L Corporation",
 	"license": "Apache-2.0",
