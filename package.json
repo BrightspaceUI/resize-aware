@@ -6,7 +6,11 @@
 	"scripts": {
 		"serve:public": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
 		"serve": "polymer serve",
-		"lint": "eslint *.js && polymer lint --sources \"*.js\" \"internal/*.js\"",
+		"lint": "npm run lint:eslint && npm run lint:polymer",
+		"lint:eslint": "eslint . --ext .js,.html",
+		"lint:polymer": "polymer lint",
+		"format": "npm run format:eslint",
+		"format:eslint": "npm run lint:eslint -- --fix",
 		"test": "npm run lint && polymer test --skip-plugin sauce",
 		"test:ci": "npm run lint && polymer test --skip-plugin local"
 	},
