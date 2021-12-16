@@ -10,7 +10,7 @@ const _watchedNodes = new Map();
 const _isSafari =
 	window.navigator.userAgent.indexOf( 'Safari/' ) >= 0 &&
 	window.navigator.userAgent.indexOf( 'Chrome/' ) === -1;
-	
+
 /* Safari's MutationObserver does not detect resizes on native textareas
  * that occur as a result of the user dragging the resizer, so we just
  * have to poll for changes in this case, But we can at least only do a
@@ -23,7 +23,7 @@ const _isSafari =
 const updateSafariWorkaroundStatus = function( hasResizableTextArea ) {
 	hasResizableTextArea = !!hasResizableTextArea;
 	if( !_isSafari || _safariWorkaroundActive === hasResizableTextArea ) return;
-	
+
 	_safariWorkaroundActive = hasResizableTextArea;
 	if( hasResizableTextArea ) {
 		window.addEventListener( 'mousemove', onPossibleResize );
@@ -39,12 +39,12 @@ const destroy = function() {
 		_shadyObserver.disconnect();
 		_shadyObserver = null;
 	}
-	
+
 	if( _shadowObserver ) {
 		_shadowObserver.destroy();
 		_shadowObserver = null;
 	}
-	
+
 	updateSafariWorkaroundStatus( false );
 	window.removeEventListener( 'resize', onPossibleResize );
 	document.removeEventListener( 'transitionend', onPossibleResize );
@@ -60,15 +60,15 @@ const onPossibleResize = function() {
 		const lastBoundingClientSize = nodeInfo.lastBoundingClientSize;
 		nodeInfo.lastContentSize = newContentSize;
 		nodeInfo.lastBoundingClientSize = newBoundingClientSize;
-		
+
 		const contentSizeChanged = ( newContentSize.width !== lastContentSize.width || newContentSize.height !== lastContentSize.height );
 		const boundingClientSizeChanged = ( newBoundingClientSize.width !== lastBoundingClientSize.width || newBoundingClientSize.height !== lastBoundingClientSize.height );
 		const posnChanged = ( newBoundingClientSize.left !== lastBoundingClientSize.left || newBoundingClientSize.top !== lastBoundingClientSize.top );
-		
+
 		if( !contentSizeChanged && !boundingClientSizeChanged && !posnChanged ) {
 			return;
 		}
-		
+
 		nodeInfo.observers.forEach( observer => {
 			if(
 				(contentSizeChanged && !observer.__fullBoundingBox) ||
@@ -78,7 +78,7 @@ const onPossibleResize = function() {
 				const resizeEntry = new ResizeObserverEntryPolyfill();
 				resizeEntry.__target = node;
 				resizeEntry.__contentRect = newContentSize;
-				
+
 				if( observerMap.has( observer ) ) {
 					observerMap.get( observer ).push( resizeEntry );
 				} else {
@@ -87,7 +87,7 @@ const onPossibleResize = function() {
 			}
 		});
 	});
-	
+
 	observerMap.forEach( ( resizeEntries, observer ) => {
 		observer.__callback( resizeEntries );
 	});
@@ -102,7 +102,7 @@ const initShadyObserver = function() {
 	if( _shadyObserver || _shadowObserver ) {
 		return;
 	}
-	
+
 	_shadyObserver = new MutationObserver( onPossibleResize );
 	_shadyObserver.observe( document.documentElement, {
 		attributes: true,
@@ -110,7 +110,7 @@ const initShadyObserver = function() {
 		characterData: true,
 		subtree: true
 	});
-	
+
 	initCommon();
 };
 
@@ -118,16 +118,16 @@ const initShadowObserver = function() {
 	if( _shadowObserver ) {
 		return;
 	}
-	
+
 	if( _shadyObserver ) {
 		// switch to shadow observer
 		destroy();
 	}
-	
+
 	_shadowObserver = new ShadowMutationObserver( document.documentElement, onPossibleResize );
 	_shadowObserver.onHasTextareaChanged = updateSafariWorkaroundStatus;
 	_shadowObserver.onTransitionEnd = onPossibleResize;
-	
+
 	initCommon();
 };
 
@@ -170,24 +170,24 @@ const removeListener = function( node, observer ) {
 class ResizeObserverEntryPolyfill {
 	get contentRect() { return this.__contentRect; }
 	get target() { return this.__target; }
-	
+
 	// extension
 	get boundingBox() { return getNodeClientBoundingBox( this.__target ); }
 }
 
 class ResizeObserverPolyfill {
-	
+
 	constructor( callback ) {
 		this.__callback = callback;
 		this.__watchedElements = new Set();
 		this.__fullBoundingBox = false;
 	}
-	
+
 	observe( node ) {
 		if( this.__watchedElements.has( node ) ) {
 			return;
 		}
-		
+
 		lazyInit();
 		this.__watchedElements.add( node );
 		addListener( node, this );
@@ -196,16 +196,16 @@ class ResizeObserverPolyfill {
 		resizeEntry.__contentRect = getNodeContentRect( node );
 		this.__callback( [resizeEntry] );
 	}
-	
+
 	unobserve( node ) {
 		if( !this.__watchedElements.has( node ) ) {
 			return;
 		}
-		
+
 		removeListener( node, this );
 		this.__watchedElements.delete( node );
 	}
-	
+
 	disconnect() {
 		this.__watchedElements.forEach( node => removeListener( node, this ) );
 		this.__watchedElements.clear();
@@ -213,7 +213,7 @@ class ResizeObserverPolyfill {
 }
 
 class ExtendedResizeObserver extends ResizeObserverPolyfill {
-	
+
 	constructor( callback, positionAware, boundingBox ) {
 		super( callback );
 		this.__positionAware = !!positionAware;
@@ -226,28 +226,28 @@ class ExtendedResizeObserver extends ResizeObserverPolyfill {
 			this.__nativeObserver = new window.ResizeObserver( onPossibleResize );
 		}
 	}
-	
+
 	observe( node ) {
 		super.observe( node );
 		if( this.__nativeObserver ) {
 			this.__nativeObserver.observe( node );
 		}
 	}
-	
+
 	unobserve( node ) {
 		super.unobserve( node );
 		if( this.__nativeObserver ) {
 			this.__nativeObserver.unobserve( node );
 		}
 	}
-	
-	disconnect( node ) {
+
+	disconnect() {
 		super.disconnect();
 		if( this.__nativeObserver ) {
 			this.__nativeObserver.disconnect();
 		}
 	}
-	
+
 }
 
 export {

@@ -24,7 +24,7 @@ class SimpleTestComponent extends PolymerElement {
 	}
 	
 	static get properties() {
-		return {}
+		return {};
 	}
 	
 	connectedCallback() {
