@@ -4,11 +4,11 @@ import { ExtendedResizeObserver } from './internal/d2l-resize-observer.js';
 import hasNativeResizeObserver from './internal/has-native-resize-observer.js';
 
 class D2LResizeAware extends PolymerElement {
-	
+
 	static get is() {
 		return 'd2l-resize-aware';
 	}
-	
+
 	static get template() {
 		const template = html`
 			<style>
@@ -21,58 +21,58 @@ class D2LResizeAware extends PolymerElement {
 		template.setAttribute('strip-whitespace', true);
 		return template;
 	}
-	
+
 	static get properties() {
 		return {
 			positionAware: {
 				type: Boolean,
 				value: false
 			},
-			
+
 			_lastSize: Object,
 			_observer: Object
 		};
 	}
-	
+
 	constructor() {
 		super();
-		this._onPossibleResize = this._onPossibleResize.bind( this );
+		this._onPossibleResize = this._onPossibleResize.bind(this);
 	}
-	
+
 	connectedCallback() {
 		super.connectedCallback();
 		this._lastSize = this.getBoundingClientRect();
-		afterNextRender( this, this._initialize.bind( this ) );
+		afterNextRender(this, this._initialize.bind(this));
 		this._onResize();
 	}
-	
+
 	disconnectedCallback() {
-		if( this._observer ) {
-			this._observer.unobserve( this );
+		if (this._observer) {
+			this._observer.unobserve(this);
 			this._observer = null;
 		}
 		super.disconnectedCallback();
 	}
-	
+
 	_initialize() {
-		if( this._observer ) {
+		if (this._observer) {
 			return;
 		}
-		
+
 		this._usingSafariWorkaround = false;
-		if( hasNativeResizeObserver && !this.positionAware ) {
+		if (hasNativeResizeObserver && !this.positionAware) {
 			/* Use native ResizeObserver */
-			this._observer = new window.ResizeObserver( this._onPossibleResize );
+			this._observer = new window.ResizeObserver(this._onPossibleResize);
 		} else {
 			/* Use polyfill */
-			this._observer = new ExtendedResizeObserver( this._onPossibleResize, this.positionAware, true );
+			this._observer = new ExtendedResizeObserver(this._onPossibleResize, this.positionAware, true);
 		}
-		this._observer.observe( this );
+		this._observer.observe(this);
 	}
-	
+
 	_onPossibleResize() {
 		const newSize = this.getBoundingClientRect();
-		if(
+		if (
 			newSize.width !== this._lastSize.width ||
 			newSize.height !== this._lastSize.height ||
 			this.positionAware && (
@@ -83,7 +83,7 @@ class D2LResizeAware extends PolymerElement {
 			this._onResize();
 		}
 	}
-	
+
 	_onResize() {
 		const newSize = this.getBoundingClientRect();
 		this.dispatchEvent(
@@ -100,7 +100,7 @@ class D2LResizeAware extends PolymerElement {
 		);
 		this._lastSize = newSize;
 	}
-	
+
 }
 
-customElements.define( D2LResizeAware.is, D2LResizeAware );
+customElements.define(D2LResizeAware.is, D2LResizeAware);
