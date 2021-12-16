@@ -24,7 +24,7 @@
 		"@webcomponents/webcomponentsjs": "^2.2.1",
 		"d2l-inputs": "BrightspaceUI/inputs#semver:^2",
 		"polymer-cli": "^1.9.6",
-		"eslint": "^4.15.0",
+		"eslint": "^8.4.1",
 		"eslint-config-brightspace": "^0.4.0",
 		"wct-browser-legacy": "^1.0.1"
 	}
