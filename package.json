@@ -28,7 +28,7 @@
   "devDependencies": {
     "@babel/core": "^7",
     "@babel/eslint-parser": "^7",
-    "@brightspace-ui/core": "^1",
+    "@brightspace-ui/core": "^2",
     "@webcomponents/webcomponentsjs": "^2",
     "eslint": "^8",
     "eslint-config-brightspace": "^0.16",
