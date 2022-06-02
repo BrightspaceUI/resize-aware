@@ -1,4 +1,4 @@
-# resize-aware
+# @brightspace-ui/resize-aware
 A Polymer 3 compatible solution to reacting to changes in an element's size and/or position.
 Contains a polyfill for `ResizeObserver` that is able to detect changes inside of webcomponents on all supported browsers (Firefox, Chrome/Chromium, Edge, IE11, and Safari).
 
@@ -7,22 +7,22 @@ Contains a polyfill for `ResizeObserver` that is able to detect changes inside o
 #### Global Polyfill
 To use the polyfill, simply import `resize-observer-polyfill.js` into the page:
 ```javascript
-import 'd2l-resize-aware/resize-observer-polyfill.js';
+import '@brightspace-ui/resize-aware/resize-observer-polyfill.js';
 ```
 or
 ```html
-<script type="module" src="d2l-resize-aware/resize-observer-polyfill.js"></script>
+<script type="module" src="@brightspace-ui/resize-aware/resize-observer-polyfill.js"></script>
 ```
 
 #### Module Import
 Alternatively, if you do not wish to alter or define `window.ResizeObserver`, you can instead import the polyfill as an es6 module:
 ```javascript
-import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js';
+import { ResizeObserver } from '@brightspace-ui/resize-aware/resize-observer-module.js';
 ```
 
 Additionally, a separate class is provided that is capable to detecting changes in position as well as size, and checks the client bounding box (as returned by `getBoundingClientRect()`) rather than its content box.
 ```javascript
-import { BoundingBoxObserver } from 'd2l-resize-aware/resize-observer-module.js';
+import { BoundingBoxObserver } from '@brightspace-ui/resize-aware/resize-observer-module.js';
 ```
 
 ### Web Component
