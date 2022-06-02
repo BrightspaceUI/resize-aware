@@ -11,7 +11,7 @@
 				"firefox": [
 					"-headless",
 					"-new-instance",
-					"http://localhost:8081/components/d2l-resize-aware/generated-index.html?cli_browser_id=1"
+					"http://localhost:8081/components/@brightspace-ui/resize-aware/generated-index.html?cli_browser_id=1"
 				]
 			}
 		},

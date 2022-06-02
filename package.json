@@ -1,5 +1,5 @@
 {
-  "name": "d2l-resize-aware",
+  "name": "@brightspace-ui/resize-aware",
   "version": "1.3.0",
   "main": "d2l-resize-aware.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "format": "npm run format:eslint",
     "format:eslint": "npm run lint:eslint -- --fix",
     "test": "npm run lint && npm run test:local",
-    "test:sauce": "npm run lint && polymer test --skip-plugin sauce",
-    "test:local": "npm run lint && polymer test --skip-plugin local"
+    "test:sauce": "npm run lint && polymer test --skip-plugin local",
+    "test:local": "npm run lint && polymer test --skip-plugin sauce"
   },
   "files": [
     "/internal",
@@ -20,6 +20,9 @@
     "resize-observer-module.js",
     "resize-observer-polyfill.js"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "D2L Corporation",
   "license": "Apache-2.0",
   "dependencies": {

@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - main
       - '[0-9]+.x'
       - '[0-9]+.[0-9]+.x'
 permissions:
@@ -26,5 +26,6 @@ jobs:
       - name: Semantic Release
         uses: BrightspaceUI/actions/semantic-release@main
         with:
-          DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{secrets.D2L_GITHUB_TOKEN}}
+          NPM: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}            
