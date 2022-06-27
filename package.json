@@ -1,6 +1,6 @@
 {
   "name": "@brightspace-ui/resize-aware",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "d2l-resize-aware.js",
   "scripts": {
     "serve:public": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
