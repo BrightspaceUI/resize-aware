@@ -34,7 +34,7 @@
     "@brightspace-ui/core": "^2",
     "@webcomponents/webcomponentsjs": "^2",
     "eslint": "^8",
-    "eslint-config-brightspace": "^0.17",
+    "eslint-config-brightspace": "^0.18",
     "eslint-plugin-html": "^6",
     "eslint-plugin-sort-class-members": "^1",
     "polymer-cli": "^1",
