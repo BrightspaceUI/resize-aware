@@ -1,6 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import '@polymer/polymer/lib/elements/dom-if.js';
 import './test-component-simple.js';
+import '@polymer/polymer/lib/elements/dom-if.js';
+import { html, PolymerElement } from '@polymer/polymer';
 
 const _testComponents = [];
 

@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import { html, PolymerElement } from '@polymer/polymer';
 
 class SlottedTestComponent extends PolymerElement {
 
