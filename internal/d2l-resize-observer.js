@@ -1,6 +1,6 @@
-import ShadowMutationObserver from './shadow-mutation-observer.js';
+import { getNodeClientBoundingBox, getNodeContentRect } from './node-size.js';
 import hasNativeResizeObserver from './has-native-resize-observer.js';
-import { getNodeContentRect, getNodeClientBoundingBox } from './node-size.js';
+import ShadowMutationObserver from './shadow-mutation-observer.js';
 
 let _shadyObserver = null;
 let _shadowObserver = null;

@@ -11,31 +11,31 @@ class ShadowMutationObserver {
 		this._callback = callback;
 		this._trackedComponents = new Map();
 		this._disposeEvents = () => null;
-		this._rootObserver = new MutationObserver(function(mutationRecords) {
+		this._rootObserver = new MutationObserver((mutationRecords) => {
 			let elementsRemoved = false;
 
 			// Start tracking any new webcomponents in the node's subtree
-			mutationRecords.forEach(function(record) {
+			mutationRecords.forEach((record) => {
 				for (let i = 0; i < record.addedNodes.length; i++) {
 					this._trackWebComponents(record.addedNodes[i]);
 				}
 
 				elementsRemoved |= record.removedNodes && record.removedNodes.length > 0;
-			}.bind(this));
+			});
 
 			if (elementsRemoved) {
 				// Stop tracking webcomponents that are no longer descendants of the node
-				this._trackedComponents.forEach(function(observer, trackedComponent) {
+				this._trackedComponents.forEach((observer, trackedComponent) => {
 					if (!node.contains(trackedComponent)) {
 						observer.destroy();
 						this._trackedComponents.delete(trackedComponent);
 					}
-				}.bind(this));
+				});
 			}
 
 			this._checkForTextArea(node);
 			callback(mutationRecords);
-		}.bind(this));
+		});
 
 		this._rootObserver.observe(node, {
 			attributes: true,
@@ -55,7 +55,7 @@ class ShadowMutationObserver {
 
 	destroy() {
 		this._rootObserver.disconnect();
-		this._trackedComponents.forEach(function(observer) {
+		this._trackedComponents.forEach((observer) => {
 			observer.destroy();
 		});
 		this._trackedComponents.clear();
@@ -84,7 +84,7 @@ class ShadowMutationObserver {
 		}
 
 		const children = node.children || node.childNodes || [];
-		for (var i = 0; i < children.length; i++) {
+		for (let i = 0; i < children.length; i++) {
 			this._trackWebComponents(children[i]);
 		}
 	}
@@ -102,7 +102,7 @@ class ShadowMutationObserver {
 		}
 
 		if (!hasTextarea) {
-			this._trackedComponents.forEach(function(observer) {
+			this._trackedComponents.forEach((observer) => {
 				hasTextarea = hasTextarea || observer.hasTextarea;
 			});
 		}

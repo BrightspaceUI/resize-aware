@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import { html, PolymerElement } from '@polymer/polymer';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { ExtendedResizeObserver } from './internal/d2l-resize-observer.js';
 import hasNativeResizeObserver from './internal/has-native-resize-observer.js';
