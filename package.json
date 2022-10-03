@@ -34,7 +34,7 @@
     "@brightspace-ui/core": "^2",
     "@webcomponents/webcomponentsjs": "^2",
     "eslint": "^8",
-    "eslint-config-brightspace": "^0.18",
+    "eslint-config-brightspace": "^0.19",
     "eslint-plugin-html": "^7",
     "eslint-plugin-import": "^2",
     "eslint-plugin-sort-class-members": "^1",
