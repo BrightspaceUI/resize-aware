@@ -6,7 +6,7 @@
     "serve:public": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
     "serve": "polymer serve",
     "lint": "npm run lint:eslint && npm run lint:polymer",
-    "lint:eslint": "eslint . --ext .js",
+    "lint:eslint": "eslint . --ext .js,.html",
     "lint:polymer": "polymer lint",
     "format": "npm run format:eslint",
     "format:eslint": "npm run lint:eslint -- --fix",
@@ -29,15 +29,10 @@
     "@polymer/polymer": "^3"
   },
   "devDependencies": {
-    "@babel/core": "^7",
-    "@babel/eslint-parser": "^7",
     "@brightspace-ui/core": "^2",
     "@webcomponents/webcomponentsjs": "^2",
     "eslint": "^8",
     "eslint-config-brightspace": "^0.19",
-    "eslint-plugin-html": "^7",
-    "eslint-plugin-import": "^2",
-    "eslint-plugin-sort-class-members": "^1",
     "polymer-cli": "^1",
     "wct-browser-legacy": "^1"
   }

@@ -68,12 +68,12 @@
 		</test-fixture>
 
 		<script type="module">
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
-import SimpleTestComponents from './test-component-simple.js';
-import NestedTestComponents from './test-component-nested.js';
 import './test-component-slotted.js';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+import NestedTestComponents from './test-component-nested.js';
+import SimpleTestComponents from './test-component-simple.js';
 
-describe('<d2l-resize-aware>', function() {
+describe('<d2l-resize-aware>', () => {
 
 	let resizeEventFired = false;
 	let component;
@@ -82,7 +82,7 @@ describe('<d2l-resize-aware>', function() {
 	const runTest = function(expectEvent, done, action) {
 		resizeEventFired = false;
 		action();
-		afterNextRender(component, function() {
+		afterNextRender(component, () => {
 			assert.equal(!!resizeEventFired, !!expectEvent);
 			done();
 		});
@@ -96,7 +96,7 @@ describe('<d2l-resize-aware>', function() {
 			} else {
 				component = root.querySelector('d2l-resize-aware');
 			}
-			component.addEventListener('d2l-resize-aware-resized', function() {
+			component.addEventListener('d2l-resize-aware-resized', () => {
 				resizeEventFired = true;
 			});
 			afterNextRender(component, () => {
@@ -105,141 +105,141 @@ describe('<d2l-resize-aware>', function() {
 		};
 	};
 
-	describe('contains native HTML elements', function() {
+	describe('contains native HTML elements', () => {
 
 		beforeEach(setup('NativeElementsFixture'));
 
-		it('element resized', function(done) {
-			runTest(true, done, function() {
+		it('element resized', (done) => {
+			runTest(true, done, () => {
 				component.querySelector('.box').style.width = '600px';
 			});
 		});
 
-		it('element added', function(done) {
-			runTest(true, done, function() {
+		it('element added', (done) => {
+			runTest(true, done, () => {
 				const textDiv = document.createElement('div');
 				textDiv.textContent = 'Text.';
 				component.appendChild(textDiv);
 			});
 		});
 
-		it('element removed', function(done) {
-			runTest(true, done, function() {
+		it('element removed', (done) => {
+			runTest(true, done, () => {
 				component.removeChild(component.querySelector('.box'));
 			});
 		});
 
-		it('resizer itself changed', function(done) {
-			runTest(true, done, function() {
+		it('resizer itself changed', (done) => {
+			runTest(true, done, () => {
 				component.style.display = 'block';
 				component.style.width = '600px';
 			});
 		});
 
-		it('control test', function(done) {
+		it('control test', (done) => {
 			runTest(false, done, () => null);
 		});
 
 	});
 
-	describe('contains simple webcomponent', function() {
+	describe('contains simple webcomponent', () => {
 
 		beforeEach(setup('SimpleComponentFixture'));
 
-		it('webcomponent resized', function(done) {
-			runTest(true, done, function() {
+		it('webcomponent resized', (done) => {
+			runTest(true, done, () => {
 				SimpleTestComponents[0].resizeDiv('200px', '600px');
 			});
 		});
 
-		it('control test', function(done) {
+		it('control test', (done) => {
 			runTest(false, done, () => null);
 		});
 
 	});
 
-	describe('contains slotted webcomponent', function() {
+	describe('contains slotted webcomponent', () => {
 
 		beforeEach(setup('SlottedComponentFixture'));
 
-		it('webcomponent resized', function(done) {
-			runTest(true, done, function() {
+		it('webcomponent resized', (done) => {
+			runTest(true, done, () => {
 				SimpleTestComponents[0].resizeDiv('200px', '600px');
 			});
 		});
 
-		it('element added to slot', function(done) {
-			runTest(true, done, function() {
+		it('element added to slot', (done) => {
+			runTest(true, done, () => {
 				const textDiv = document.createElement('div');
 				textDiv.textContent = 'Text.';
 				component.querySelector('test-component-slotted').appendChild(textDiv);
 			});
 		});
 
-		it('element removed from slot', function(done) {
-			runTest(true, done, function() {
+		it('element removed from slot', (done) => {
+			runTest(true, done, () => {
 				const slottedComponent = component.querySelector('test-component-slotted');
 				slottedComponent.removeChild(slottedComponent.querySelector('test-component-simple'));
 			});
 		});
 
-		it('control test', function(done) {
+		it('control test', (done) => {
 			runTest(false, done, () => null);
 		});
 
 	});
 
-	describe('contains nested webcomponent', function() {
+	describe('contains nested webcomponent', () => {
 
 		beforeEach(setup('NestedComponentFixture'));
 
-		it('nested webcomponent resized', function(done) {
-			runTest(true, done, function() {
+		it('nested webcomponent resized', (done) => {
+			runTest(true, done, () => {
 				SimpleTestComponents[0].resizeDiv('200px', '600px');
 			});
 		});
 
-		it('nested webcomponent removed', function(done) {
-			runTest(true, done, function() {
+		it('nested webcomponent removed', (done) => {
+			runTest(true, done, () => {
 				NestedTestComponents[0].removeChildComponent();
 			});
 		});
 
-		it('nested webcomponent added', function(done) {
-			runTest(true, done, function() {
+		it('nested webcomponent added', (done) => {
+			runTest(true, done, () => {
 				NestedTestComponents[0].addChildComponent();
 			});
 		});
 
-		it('element resized after being added to component', function(done) {
+		it('element resized after being added to component', (done) => {
 			NestedTestComponents[0].addChildComponent();
-			afterNextRender(NestedTestComponents[0], function() {
+			afterNextRender(NestedTestComponents[0], () => {
 				resizeEventFired = false;
 				SimpleTestComponents[1].resizeDiv('200px', '600px');
-				afterNextRender(NestedTestComponents[0], function() {
+				afterNextRender(NestedTestComponents[0], () => {
 					assert.equal(!!resizeEventFired, true);
 					done();
 				});
 			});
 		});
 
-		it('control test', function(done) {
+		it('control test', (done) => {
 			runTest(false, done, () => null);
 		});
 
 	});
 
-	describe('position aware', function() {
+	describe('position aware', () => {
 
 		beforeEach(setup('PositionAware'));
 
-		it('component moved', function(done) {
-			runTest(true, done, function() {
+		it('component moved', (done) => {
+			runTest(true, done, () => {
 				root.querySelector('.spacer').style.width = '100px';
 			});
 		});
 
-		it('control test', function(done) {
+		it('control test', (done) => {
 			runTest(false, done, () => null);
 		});
 
