@@ -35,13 +35,5 @@ jobs:
         run: npm i
       - name: Test
         run: |
-          if ${{env.SAUCE_ACCESS_KEY != ''}}; then
-            echo 'Running full test suite'
-            npm run test:sauce
-          else
-            echo 'Running headless test suite'
-            npm run test:local
-          fi
-        env:
-          SAUCE_USERNAME: Desire2Learn
-          SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY_DESIRE2LEARN}}
+          echo 'Running headless test suite'
+          npm run test:local
