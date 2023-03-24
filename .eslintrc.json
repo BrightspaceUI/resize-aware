@@ -1,12 +1,3 @@
 {
-  "extends": "brightspace/polymer-3-config",
-  "rules": {
-    "sort-class-members/sort-class-members": [
-      "off"
-    ]
-  },
-  "globals": {
-    "Map": true,
-    "Set": true
-  }
+  "extends": "brightspace/lit-config"
 }

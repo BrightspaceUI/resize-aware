@@ -7,14 +7,16 @@ class DOMRectReadOnlyPolyfill {
 		this.__height = height;
 	}
 
-	get x() { return this.__x; }
-	get y() { return this.__y; }
+	get bottom() { return this.__y + this.__height; }
+	get height() { return this.__height; }
 	get left() { return this.__x; }
+	get right() { return this.__x + this.__width; }
 	get top() { return this.__y; }
 	get width() { return this.__width; }
-	get height() { return this.__height; }
-	get right() { return this.__x + this.__width; }
-	get bottom() { return this.__y + this.__height; }
+	get x() { return this.__x; }
+
+	get y() { return this.__y; }
+
 }
 
 const toReadOnlyDOMRect = function(domRect) {

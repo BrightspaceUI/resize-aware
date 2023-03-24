@@ -12,11 +12,11 @@ const _isSafari =
 	window.navigator.userAgent.indexOf('Chrome/') === -1;
 
 class ResizeObserverEntryPolyfill {
+	// extension
+	get boundingBox() { return getNodeClientBoundingBox(this.__target); }
 	get contentRect() { return this.__contentRect; }
 	get target() { return this.__target; }
 
-	// extension
-	get boundingBox() { return getNodeClientBoundingBox(this.__target); }
 }
 
 const onPossibleResize = function() {
@@ -183,6 +183,11 @@ class ResizeObserverPolyfill {
 		this.__fullBoundingBox = false;
 	}
 
+	disconnect() {
+		this.__watchedElements.forEach(node => removeListener(node, this));
+		this.__watchedElements.clear();
+	}
+
 	observe(node) {
 		if (this.__watchedElements.has(node)) {
 			return;
@@ -206,10 +211,6 @@ class ResizeObserverPolyfill {
 		this.__watchedElements.delete(node);
 	}
 
-	disconnect() {
-		this.__watchedElements.forEach(node => removeListener(node, this));
-		this.__watchedElements.clear();
-	}
 }
 
 class ExtendedResizeObserver extends ResizeObserverPolyfill {
@@ -227,6 +228,13 @@ class ExtendedResizeObserver extends ResizeObserverPolyfill {
 		}
 	}
 
+	disconnect() {
+		super.disconnect();
+		if (this.__nativeObserver) {
+			this.__nativeObserver.disconnect();
+		}
+	}
+
 	observe(node) {
 		super.observe(node);
 		if (this.__nativeObserver) {
@@ -238,13 +246,6 @@ class ExtendedResizeObserver extends ResizeObserverPolyfill {
 		super.unobserve(node);
 		if (this.__nativeObserver) {
 			this.__nativeObserver.unobserve(node);
-		}
-	}
-
-	disconnect() {
-		super.disconnect();
-		if (this.__nativeObserver) {
-			this.__nativeObserver.disconnect();
 		}
 	}
 

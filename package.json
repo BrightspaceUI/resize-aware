@@ -29,11 +29,12 @@
     "npm": ">=9.5.0 <10"
   },
   "dependencies": {
-    "@polymer/polymer": "^3"
+    "lit": "^2"
   },
   "devDependencies": {
     "@brightspace-ui/core": "^2",
     "@open-wc/testing": "^3",
+    "@polymer/polymer": "^3",
     "@web/dev-server": "^0.1",
     "@web/test-runner": "^0.15",
     "d2l-license-checker": "^4",

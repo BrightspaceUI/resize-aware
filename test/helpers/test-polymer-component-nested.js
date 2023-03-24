@@ -1,4 +1,4 @@
-import './test-component-simple.js';
+import './test-polymer-component-simple.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import { html, PolymerElement } from '@polymer/polymer';
 
@@ -19,17 +19,13 @@ class NestedTestComponent extends PolymerElement {
 		};
 	}
 
-	static get is() {
-		return 'test-component-nested';
-	}
-
 	static get template() {
 		const template = html`
 			<template is="dom-if" if="[[_hasChild1]]" restamp>
-				<test-component-simple></test-component-simple>
+				<test-polymer-component-simple></test-polymer-component-simple>
 			</template>
 			<template is="dom-if" if="[[_hasChild2]]" restamp>
-				<test-component-simple></test-component-simple>
+				<test-polymer-component-simple></test-polymer-component-simple>
 			</template>
 		`;
 		template.setAttribute('strip-whitespace', true);
@@ -46,6 +42,7 @@ class NestedTestComponent extends PolymerElement {
 		if (i >= 0) {
 			_testComponents.splice(i, 1);
 		}
+		super.disconnectedCallback();
 	}
 
 	addChildComponent() {
@@ -58,6 +55,6 @@ class NestedTestComponent extends PolymerElement {
 
 }
 
-customElements.define(NestedTestComponent.is, NestedTestComponent);
+customElements.define('test-polymer-component-nested', NestedTestComponent);
 
 export default _testComponents;
