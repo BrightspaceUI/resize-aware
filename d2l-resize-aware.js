@@ -6,9 +6,7 @@ class D2LResizeAware extends LitElement {
 
 	static get properties() {
 		return {
-			positionAware: { type: Boolean, attribute: 'position-aware' },
-			_lastSize: { state: true },
-			_observer: { state: true }
+			positionAware: { type: Boolean, attribute: 'position-aware' }
 		};
 	}
 
