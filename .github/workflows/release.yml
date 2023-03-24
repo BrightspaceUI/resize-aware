@@ -5,6 +5,8 @@ on:
       - main
       - '[0-9]+.x'
       - '[0-9]+.[0-9]+.x'
+env:
+  FORCE_COLOR: 3
 permissions:
   contents: read
 concurrency: release
@@ -18,7 +20,7 @@ jobs:
         uses: Brightspace/third-party-actions@actions/checkout
         with:
           persist-credentials: false
-      - name: Setup node
+      - name: Set up node
         uses: Brightspace/third-party-actions@actions/setup-node
         with:
           node-version-file: .nvmrc
@@ -26,5 +28,7 @@ jobs:
         uses: BrightspaceUI/actions/semantic-release@main
         with:
           GITHUB_TOKEN: ${{secrets.D2L_GITHUB_TOKEN}}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          MINOR_RELEASE_WITH_LMS: true
           NPM: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RALLY_API_KEY: ${{secrets.RALLY_API_KEY}}

@@ -4,10 +4,15 @@
   "version": "1.5.0",
   "main": "d2l-resize-aware.js",
   "scripts": {
-    "lint": "eslint . --ext .js,.html",
-    "start": "web-dev-server --app-index demo/index.html --node-resolve --open --watch",
+    "license-check": "d2l-license-checker -p",
+    "lint": "npm run lint:eslint",
+    "lint:eslint": "eslint . --ext .js,.html",
+    "format": "npm run format:eslint",
+    "format:eslint": "npm run lint:eslint -- --fix",
+    "start": "wds --watch --open demo/ --config wds.config.js",
     "test": "npm run lint && npm run test:headless",
-    "test:headless": "web-test-runner --files \"./test/**/*.test.js\" --node-resolve"
+    "test:headless": "wtr --group default --config wtr.config.js",
+    "test:headless:watch": "npm run test:headless -- --watch"
   },
   "files": [
     "/internal",
@@ -20,14 +25,19 @@
   },
   "author": "D2L Corporation",
   "license": "Apache-2.0",
+  "engines": {
+    "npm": ">=9.5.0 <10"
+  },
   "dependencies": {
     "@polymer/polymer": "^3"
   },
   "devDependencies": {
+    "@brightspace-ui/core": "^2",
     "@open-wc/testing": "^3",
     "@web/dev-server": "^0.1",
     "@web/test-runner": "^0.15",
-    "@brightspace-ui/core": "^2",
+    "d2l-license-checker": "^4",
+    "deepmerge": "^4",
     "eslint": "^8",
     "eslint-config-brightspace": "^0.20"
   }
