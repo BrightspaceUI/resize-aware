@@ -1,18 +1,13 @@
 {
   "name": "@brightspace-ui/resize-aware",
+  "type": "module",
   "version": "1.4.1",
   "main": "d2l-resize-aware.js",
   "scripts": {
-    "serve:public": "FOR /F \"tokens=*\" %F IN ('hostname') DO polymer serve --hostname %F.desire2learn.d2l",
-    "serve": "polymer serve",
-    "lint": "npm run lint:eslint && npm run lint:polymer",
-    "lint:eslint": "eslint . --ext .js",
-    "lint:polymer": "polymer lint",
-    "format": "npm run format:eslint",
-    "format:eslint": "npm run lint:eslint -- --fix",
-    "test": "npm run lint && npm run test:local",
-    "test:sauce": "npm run lint && polymer test --skip-plugin local",
-    "test:local": "npm run lint && polymer test --skip-plugin sauce"
+    "lint": "eslint . --ext .js,.html",
+    "start": "web-dev-server --app-index demo/index.html --node-resolve --open --watch",
+    "test": "npm run lint && npm run test:headless",
+    "test:headless": "web-test-runner --files \"./test/**/*.test.js\" --node-resolve"
   },
   "files": [
     "/internal",
@@ -29,16 +24,11 @@
     "@polymer/polymer": "^3"
   },
   "devDependencies": {
-    "@babel/core": "^7",
-    "@babel/eslint-parser": "^7",
+    "@open-wc/testing": "^3",
+    "@web/dev-server": "^0.1",
+    "@web/test-runner": "^0.15",
     "@brightspace-ui/core": "^2",
-    "@webcomponents/webcomponentsjs": "^2",
     "eslint": "^8",
-    "eslint-config-brightspace": "^0.20",
-    "eslint-plugin-html": "^7",
-    "eslint-plugin-import": "^2",
-    "eslint-plugin-sort-class-members": "^1",
-    "polymer-cli": "^1",
-    "wct-browser-legacy": "^1"
+    "eslint-config-brightspace": "^0.20"
   }
 }

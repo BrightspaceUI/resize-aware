@@ -3,8 +3,6 @@
 	<head>
 		<meta charset="utf-8">
 		<title>d2l-resize-aware demo</title>
-
-		<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
 		<script type="module" src="/node_modules/@brightspace-ui/core/components/inputs/input-textarea.js"></script>
 		<script type="module" src="../d2l-resize-aware.js"></script>
 
@@ -44,9 +42,9 @@
 		</div>
 
 		<script>
-			document.getElementById('resize-detector').addEventListener('d2l-resize-aware-resized', function(event) {
-				var width = event.detail.current.width + 'px';
-				var height = event.detail.current.height + 'px';
+			document.getElementById('resize-detector').addEventListener('d2l-resize-aware-resized', (event) => {
+				const width = `${event.detail.current.width}px`;
+				const height = `${event.detail.current.height}px`;
 				document.getElementById('height-bar').style.width = height;
 				document.getElementById('height-text').textContent = height;
 				document.getElementById('width-bar').style.width = width;
