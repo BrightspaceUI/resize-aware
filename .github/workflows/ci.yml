@@ -16,10 +16,15 @@ jobs:
         uses: Brightspace/third-party-actions@actions/setup-node
         with:
           node-version-file: .nvmrc
+          cache: npm
       - name: Install dependencies
-        run: npm i
+        run: npm ci
       - name: Lint (JavaScript)
         run: npm run lint:eslint
+      - name: Lint (CSS)
+        run: npm run lint:style
+      - name: Lint (Lit)
+        run: npm run lint:lit
   check-licenses:
     name: Check Licenses
     timeout-minutes: 5
@@ -31,8 +36,9 @@ jobs:
         uses: Brightspace/third-party-actions@actions/setup-node
         with:
           node-version-file: .nvmrc
+          cache: npm
       - name: Install dependencies
-        run: npm i
+        run: npm ci
       - name: Check licenses
         run: npm run license-check
   playwright:
@@ -46,9 +52,10 @@ jobs:
         uses: Brightspace/third-party-actions@actions/setup-node
         with:
           node-version-file: .nvmrc
+          cache: npm
       - name: Install dependencies
         run: |
-          npm i
+          npm ci
           npm i @web/test-runner-playwright --no-save
           npx playwright install-deps
       - name: Test
