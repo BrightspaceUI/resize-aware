@@ -15,7 +15,7 @@
     "test:headless:watch": "npm run test:headless -- --watch"
   },
   "files": [
-    "/internal",
+    "/src",
     "d2l-resize-aware.js",
     "resize-observer-module.js",
     "resize-observer-polyfill.js"
