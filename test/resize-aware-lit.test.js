@@ -1,17 +1,16 @@
 import '../d2l-resize-aware.js';
-import './test-component-slotted.js';
+import './helpers/lit/test-component-slotted.js';
 import { fixture, html, oneEvent } from '@open-wc/testing';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
-import NestedTestComponents from './test-component-nested.js';
-import SimpleTestComponents from './test-component-simple.js';
+import NestedTestComponents from './helpers/lit/test-component-nested.js';
+import SimpleTestComponents from './helpers/lit/test-component-simple.js';
 
-function afterNextRenderAsPromise(elem) {
+function requestAnimationFrameAsPromise() {
 	return new Promise(resolve => {
-		afterNextRender(elem, () => resolve());
+		requestAnimationFrame(() => resolve());
 	});
 }
 
-describe('d2l-resize-aware', () => {
+describe('d2l-resize-aware lit', () => {
 
 	let component;
 	let root;
@@ -23,8 +22,8 @@ describe('d2l-resize-aware', () => {
 		} else {
 			component = root.querySelector('d2l-resize-aware');
 		}
-		await afterNextRenderAsPromise(component);
-		await afterNextRenderAsPromise(component);
+		await requestAnimationFrameAsPromise();
+		await requestAnimationFrameAsPromise();
 	};
 
 	describe('contains native HTML elements', () => {
@@ -65,7 +64,7 @@ describe('d2l-resize-aware', () => {
 	describe('contains simple webcomponent', () => {
 
 		beforeEach(async() => {
-			await setup(html`<d2l-resize-aware><test-component-simple></test-component-simple></d2l-resize-aware>`);
+			await setup(html`<d2l-resize-aware><test-lit-component-simple></test-lit-component-simple></d2l-resize-aware>`);
 		});
 
 		it('webcomponent resized', async() => {
@@ -80,9 +79,9 @@ describe('d2l-resize-aware', () => {
 		beforeEach(async() => {
 			await setup(html`
 				<d2l-resize-aware>
-					<test-component-slotted>
-						<test-component-simple></test-component-simple>
-					</test-component-slotted>
+					<test-lit-component-slotted>
+						<test-lit-component-simple></test-lit-component-simple>
+					</test-lit-component-slotted>
 				</d2l-resize-aware>
 			`);
 		});
@@ -96,15 +95,15 @@ describe('d2l-resize-aware', () => {
 			setTimeout(() => {
 				const textDiv = document.createElement('div');
 				textDiv.textContent = 'Text.';
-				component.querySelector('test-component-slotted').appendChild(textDiv);
+				component.querySelector('test-lit-component-slotted').appendChild(textDiv);
 			});
 			await oneEvent(component, 'd2l-resize-aware-resized');
 		});
 
 		it('element removed from slot', async() => {
 			setTimeout(() => {
-				const slottedComponent = component.querySelector('test-component-slotted');
-				slottedComponent.removeChild(slottedComponent.querySelector('test-component-simple'));
+				const slottedComponent = component.querySelector('test-lit-component-slotted');
+				slottedComponent.removeChild(slottedComponent.querySelector('test-lit-component-simple'));
 			});
 			await oneEvent(component, 'd2l-resize-aware-resized');
 		});
@@ -114,7 +113,7 @@ describe('d2l-resize-aware', () => {
 	describe('contains nested webcomponent', () => {
 
 		beforeEach(async() => {
-			await setup(html`<d2l-resize-aware><test-component-nested></test-component-nested></d2l-resize-aware>`);
+			await setup(html`<d2l-resize-aware><test-lit-component-nested></test-lit-component-nested></d2l-resize-aware>`);
 		});
 
 		it('nested webcomponent resized', async() => {

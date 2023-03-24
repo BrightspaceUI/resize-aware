@@ -19,21 +19,21 @@ class NestedTestComponent extends PolymerElement {
 		};
 	}
 
-	static get is() {
-		return 'test-component-nested';
-	}
-
 	static get template() {
 		const template = html`
 			<template is="dom-if" if="[[_hasChild1]]" restamp>
-				<test-component-simple></test-component-simple>
+				<test-polymer-component-simple></test-polymer-component-simple>
 			</template>
 			<template is="dom-if" if="[[_hasChild2]]" restamp>
-				<test-component-simple></test-component-simple>
+				<test-polymer-component-simple></test-polymer-component-simple>
 			</template>
 		`;
 		template.setAttribute('strip-whitespace', true);
 		return template;
+	}
+
+	addChildComponent() {
+		this.set('_hasChild2', true);
 	}
 
 	connectedCallback() {
@@ -46,10 +46,7 @@ class NestedTestComponent extends PolymerElement {
 		if (i >= 0) {
 			_testComponents.splice(i, 1);
 		}
-	}
-
-	addChildComponent() {
-		this.set('_hasChild2', true);
+		super.disconnectedCallback();
 	}
 
 	removeChildComponent() {
@@ -58,6 +55,6 @@ class NestedTestComponent extends PolymerElement {
 
 }
 
-customElements.define(NestedTestComponent.is, NestedTestComponent);
+customElements.define('test-polymer-component-nested', NestedTestComponent);
 
 export default _testComponents;

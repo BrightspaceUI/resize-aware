@@ -4,14 +4,6 @@ const _testComponents = [];
 
 class SimpleTestComponent extends PolymerElement {
 
-	static get properties() {
-		return {};
-	}
-
-	static get is() {
-		return 'test-component-simple';
-	}
-
 	static get template() {
 		const template = html`
 			<style>
@@ -37,6 +29,7 @@ class SimpleTestComponent extends PolymerElement {
 		if (i >= 0) {
 			_testComponents.splice(i, 1);
 		}
+		super.disconnectedCallback();
 	}
 
 	resizeDiv(width, height) {
@@ -46,6 +39,6 @@ class SimpleTestComponent extends PolymerElement {
 
 }
 
-customElements.define(SimpleTestComponent.is, SimpleTestComponent);
+customElements.define('test-polymer-component-simple', SimpleTestComponent);
 
 export default _testComponents;

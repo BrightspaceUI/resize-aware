@@ -53,6 +53,10 @@ class ShadowMutationObserver {
 		}
 	}
 
+	get hasTextarea() {
+		return this._hasTextarea;
+	}
+
 	destroy() {
 		this._rootObserver.disconnect();
 		this._trackedComponents.forEach((observer) => {
@@ -62,31 +66,12 @@ class ShadowMutationObserver {
 		this._disposeEvents();
 	}
 
-	get hasTextarea() {
-		return this._hasTextarea;
-	}
-
 	onHasTextareaChanged(/* hasTextarea */) {
 		/* override */
 	}
 
 	onTransitionEnd(/* event */) {
 		/* override */
-	}
-
-	_trackWebComponents(node) {
-		if (node.shadowRoot && !this._trackedComponents.get(node)) {
-			const childObserver = new ShadowMutationObserver(node.shadowRoot, this._callback);
-			childObserver.onHasTextareaChanged = hasTextarea => this.onHasTextareaChanged(hasTextarea);
-			childObserver.onTransitionEnd = event => this.onTransitionEnd(event);
-
-			this._trackedComponents.set(node, childObserver);
-		}
-
-		const children = node.children || node.childNodes || [];
-		for (let i = 0; i < children.length; i++) {
-			this._trackWebComponents(children[i]);
-		}
 	}
 
 	/* Workaround for Safari >:( */
@@ -110,6 +95,21 @@ class ShadowMutationObserver {
 		if (hasTextarea !== this._hasTextarea) {
 			this._hasTextarea = hasTextarea;
 			this.onHasTextareaChanged(hasTextarea);
+		}
+	}
+
+	_trackWebComponents(node) {
+		if (node.shadowRoot && !this._trackedComponents.get(node)) {
+			const childObserver = new ShadowMutationObserver(node.shadowRoot, this._callback);
+			childObserver.onHasTextareaChanged = hasTextarea => this.onHasTextareaChanged(hasTextarea);
+			childObserver.onTransitionEnd = event => this.onTransitionEnd(event);
+
+			this._trackedComponents.set(node, childObserver);
+		}
+
+		const children = node.children || node.childNodes || [];
+		for (let i = 0; i < children.length; i++) {
+			this._trackWebComponents(children[i]);
 		}
 	}
 

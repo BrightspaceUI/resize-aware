@@ -1,48 +1,34 @@
-import { html, PolymerElement } from '@polymer/polymer';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+import { css, html, LitElement } from 'lit';
 import { ExtendedResizeObserver } from './internal/d2l-resize-observer.js';
 import hasNativeResizeObserver from './internal/has-native-resize-observer.js';
 
-class D2LResizeAware extends PolymerElement {
-
-	static get is() {
-		return 'd2l-resize-aware';
-	}
-
-	static get template() {
-		const template = html`
-			<style>
-				:host {
-					display: inline-block;
-				}
-			</style>
-			<slot id="slot"></slot>
-		`;
-		template.setAttribute('strip-whitespace', true);
-		return template;
-	}
+class D2LResizeAware extends LitElement {
 
 	static get properties() {
 		return {
-			positionAware: {
-				type: Boolean,
-				value: false
-			},
-
-			_lastSize: Object,
-			_observer: Object
+			positionAware: { type: Boolean, attribute: 'position-aware' }
 		};
+	}
+
+	static get styles() {
+		return css`
+			:host {
+				display: inline-block;
+			}
+		`;
 	}
 
 	constructor() {
 		super();
-		this._onPossibleResize = this._onPossibleResize.bind(this);
+		this.positionAware = false;
 	}
 
 	connectedCallback() {
 		super.connectedCallback();
 		this._lastSize = this.getBoundingClientRect();
-		afterNextRender(this, this._initialize.bind(this));
+
+		requestAnimationFrame(() => this._initialize());
+
 		this._onResize();
 	}
 
@@ -54,6 +40,10 @@ class D2LResizeAware extends PolymerElement {
 		super.disconnectedCallback();
 	}
 
+	render() {
+		return html`<slot id="slot"></slot>`;
+	}
+
 	_initialize() {
 		if (this._observer) {
 			return;
@@ -62,10 +52,10 @@ class D2LResizeAware extends PolymerElement {
 		this._usingSafariWorkaround = false;
 		if (hasNativeResizeObserver && !this.positionAware) {
 			/* Use native ResizeObserver */
-			this._observer = new window.ResizeObserver(this._onPossibleResize);
+			this._observer = new window.ResizeObserver(() => this._onPossibleResize());
 		} else {
 			/* Use polyfill */
-			this._observer = new ExtendedResizeObserver(this._onPossibleResize, this.positionAware, true);
+			this._observer = new ExtendedResizeObserver(() => this._onPossibleResize(), this.positionAware, true);
 		}
 		this._observer.observe(this);
 	}
@@ -103,4 +93,4 @@ class D2LResizeAware extends PolymerElement {
 
 }
 
-customElements.define(D2LResizeAware.is, D2LResizeAware);
+customElements.define('d2l-resize-aware', D2LResizeAware);
