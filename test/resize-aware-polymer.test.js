@@ -1,8 +1,8 @@
 import '../d2l-resize-aware.js';
-import './helpers/test-polymer-component-slotted.js';
+import './helpers/polymer/test-component-slotted.js';
 import { fixture, html, oneEvent } from '@open-wc/testing';
-import NestedTestComponents from './helpers/test-polymer-component-nested.js';
-import SimpleTestComponents from './helpers/test-polymer-component-simple.js';
+import NestedTestComponents from './helpers/polymer/test-component-nested.js';
+import SimpleTestComponents from './helpers/polymer/test-component-simple.js';
 
 function requestAnimationFrameAsPromise() {
 	return new Promise(resolve => {

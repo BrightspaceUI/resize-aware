@@ -1,4 +1,4 @@
-import './test-lit-component-simple.js';
+import './test-component-simple.js';
 import { html, LitElement, nothing } from 'lit';
 
 const _testComponents = [];

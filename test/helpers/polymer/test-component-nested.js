@@ -1,4 +1,4 @@
-import './test-polymer-component-simple.js';
+import './test-component-simple.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import { html, PolymerElement } from '@polymer/polymer';
 
@@ -32,6 +32,10 @@ class NestedTestComponent extends PolymerElement {
 		return template;
 	}
 
+	addChildComponent() {
+		this.set('_hasChild2', true);
+	}
+
 	connectedCallback() {
 		super.connectedCallback();
 		_testComponents.push(this);
@@ -43,10 +47,6 @@ class NestedTestComponent extends PolymerElement {
 			_testComponents.splice(i, 1);
 		}
 		super.disconnectedCallback();
-	}
-
-	addChildComponent() {
-		this.set('_hasChild2', true);
 	}
 
 	removeChildComponent() {
