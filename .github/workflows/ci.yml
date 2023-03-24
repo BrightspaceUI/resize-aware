@@ -1,5 +1,7 @@
 name: CI
 on: pull_request
+env:
+  FORCE_COLOR: 3
 permissions:
   contents: read
 jobs:
@@ -15,11 +17,41 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: |
-          npm install
-          npm install @web/test-runner-playwright --no-save
-          npx playwright install-deps
+        run: npm i
       - name: Lint (JavaScript)
-        run: npm run lint
-      - name: Unit Tests (cross-browser)
-        run: npx web-test-runner --files "./test/**/*.test.js" --node-resolve --playwright --browsers chromium firefox webkit
+        run: npm run lint:eslint
+  check-licenses:
+    name: Check Licenses
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
+      - name: Set up node
+        uses: Brightspace/third-party-actions@actions/setup-node
+        with:
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm i
+      - name: Check licenses
+        run: npm run license-check
+  playwright:
+    name: Unit Tests
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
+      - name: Set up node
+        uses: Brightspace/third-party-actions@actions/setup-node
+        with:
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: |
+          npm i
+          npm i @web/test-runner-playwright --no-save
+          npx playwright install-deps
+      - name: Test
+        run: >
+          npx wtr --config wtr.config.js --group default --playwright
+          --browsers chromium firefox webkit
