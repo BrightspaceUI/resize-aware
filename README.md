@@ -1,5 +1,6 @@
 # @brightspace-ui/resize-aware
-A Polymer 3 compatible solution to reacting to changes in an element's size and/or position.
+
+A lit and polymer compatible solution to reacting to changes in an element's size and/or position.
 Contains a polyfill for `ResizeObserver` that is able to detect changes inside of webcomponents on all supported browsers (Firefox, Chrome/Chromium, Edge, IE11, and Safari).
 
 ### Polyfill
