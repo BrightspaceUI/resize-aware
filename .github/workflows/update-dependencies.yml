@@ -1,0 +1,34 @@
+name: Update Dependencies
+on:
+  schedule:
+    - cron: '00 10 * * 1-5' # Mon-Fri 6:00am EDT/5:00am EST
+  workflow_dispatch: # manual trigger
+env:
+  FORCE_COLOR: 3
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  update:
+    name: Update Dependencies
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: Brightspace/third-party-actions@actions/checkout
+        with:
+          token: ${{secrets.PR_MANAGE_TOKEN}}
+      - name: Set up node
+        uses: Brightspace/third-party-actions@actions/setup-node
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Update package-lock.json
+        uses: BrightspaceUI/actions/update-package-lock@main
+        with:
+          APPROVAL_TOKEN: ${{github.token}}
+          AUTO_MERGE_METHOD: squash
+          AUTO_MERGE_TOKEN: ${{secrets.PR_MANAGE_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.PR_MANAGE_TOKEN}}
+          COMMIT_MESSAGE: Update Dependencies
+          PR_TITLE: Update Dependencies

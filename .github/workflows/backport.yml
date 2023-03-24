@@ -1,0 +1,22 @@
+name: Backport
+on:
+  issue_comment:
+    types:
+      - created
+env:
+  FORCE_COLOR: 3
+permissions:
+  contents: read
+jobs:
+  backport:
+    name: Backport
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    if: >
+      github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/backport')
+    steps:
+      - name: Create backport pull request
+        uses: Brightspace/lms-version-actions/backport@main
+        with:
+          GITHUB_TOKEN: ${{secrets.PR_MANAGE_TOKEN}}

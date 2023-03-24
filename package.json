@@ -5,10 +5,13 @@
   "main": "d2l-resize-aware.js",
   "scripts": {
     "license-check": "d2l-license-checker -p",
-    "lint": "npm run lint:eslint",
+    "lint": "npm run lint:eslint && npm run lint:lit && npm run lint:style",
     "lint:eslint": "eslint . --ext .js,.html",
-    "format": "npm run format:eslint",
+    "lint:lit": "lit-analyzer \"{src,test/helpers/lit}/**/*.js\" --format list",
+    "lint:style": "stylelint \"**/*.{js,html}\"",
+    "format": "npm run format:eslint && npm run format:style",
     "format:eslint": "npm run lint:eslint -- --fix",
+    "format:style": "npm run lint:style -- --fix",
     "start": "wds --watch --open demo/ --config wds.config.js",
     "test": "npm run lint && npm run test:headless",
     "test:headless": "wtr --group default --config wtr.config.js",
@@ -33,6 +36,7 @@
   },
   "devDependencies": {
     "@brightspace-ui/core": "^2",
+    "@brightspace-ui/stylelint-config": "^0.7",
     "@open-wc/testing": "^3",
     "@polymer/polymer": "^3",
     "@web/dev-server": "^0.1",
@@ -40,6 +44,8 @@
     "d2l-license-checker": "^4",
     "deepmerge": "^4",
     "eslint": "^8",
-    "eslint-config-brightspace": "^0.20"
+    "eslint-config-brightspace": "^0.20",
+    "lit-analyzer": "^1",
+    "stylelint": "^14"
   }
 }

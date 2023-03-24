@@ -1,0 +1,7 @@
+{
+  "extends": "@brightspace-ui/stylelint-config",
+  "rules": {
+    "order/properties-alphabetical-order": null,
+    "no-eol-whitespace": null
+  }
+}
