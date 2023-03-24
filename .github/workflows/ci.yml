@@ -15,33 +15,11 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: npm i
-      - name: Lint (JavaScript)
-        run: npm run lint:eslint
-      - name: Lint (Polymer)
-        run: npm run lint:polymer
-  test:
-    name: Test
-    timeout-minutes: 5
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: Brightspace/third-party-actions@actions/checkout
-      - name: Set up node
-        uses: Brightspace/third-party-actions@actions/setup-node
-        with:
-          node-version-file: .nvmrc
-      - name: Install dependencies
-        run: npm i
-      - name: Test
         run: |
-          if ${{env.SAUCE_ACCESS_KEY != ''}}; then
-            echo 'Running full test suite'
-            npm run test:sauce
-          else
-            echo 'Running headless test suite'
-            npm run test:local
-          fi
-        env:
-          SAUCE_USERNAME: Desire2Learn
-          SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY_DESIRE2LEARN}}
+          npm install
+          npm install @web/test-runner-playwright --no-save
+          npx playwright install-deps
+      - name: Lint (JavaScript)
+        run: npm run lint
+      - name: Unit Tests (cross-browser)
+        run: npx web-test-runner --files "./test/**/*.test.js" --node-resolve --playwright --browsers chromium firefox webkit

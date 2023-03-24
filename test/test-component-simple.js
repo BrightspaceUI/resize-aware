@@ -4,6 +4,10 @@ const _testComponents = [];
 
 class SimpleTestComponent extends PolymerElement {
 
+	static get properties() {
+		return {};
+	}
+
 	static get is() {
 		return 'test-component-simple';
 	}
@@ -21,10 +25,6 @@ class SimpleTestComponent extends PolymerElement {
 		`;
 		template.setAttribute('strip-whitespace', true);
 		return template;
-	}
-
-	static get properties() {
-		return {};
 	}
 
 	connectedCallback() {

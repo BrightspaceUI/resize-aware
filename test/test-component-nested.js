@@ -6,6 +6,19 @@ const _testComponents = [];
 
 class NestedTestComponent extends PolymerElement {
 
+	static get properties() {
+		return {
+			'_hasChild1': {
+				type: Boolean,
+				value: true
+			},
+			'_hasChild2': {
+				type: Boolean,
+				value: false
+			}
+		};
+	}
+
 	static get is() {
 		return 'test-component-nested';
 	}
@@ -21,19 +34,6 @@ class NestedTestComponent extends PolymerElement {
 		`;
 		template.setAttribute('strip-whitespace', true);
 		return template;
-	}
-
-	static get properties() {
-		return {
-			'_hasChild1': {
-				type: Boolean,
-				value: true
-			},
-			'_hasChild2': {
-				type: Boolean,
-				value: false
-			}
-		};
 	}
 
 	connectedCallback() {
