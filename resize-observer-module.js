@@ -1,4 +1,4 @@
-import { ExtendedResizeObserver, ResizeObserverPolyfill } from './src/helpers/d2l-resize-observer.js';
+import { ExtendedResizeObserver, ResizeObserverPolyfill } from './src/helpers/resize-observer.js';
 import hasNativeResizeObserver from './src/helpers/has-native-resize-observer.js';
 
 const ResizeObserverExport = hasNativeResizeObserver ? window.ResizeObserver : ResizeObserverPolyfill;

@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import { ExtendedResizeObserver } from '../helpers/d2l-resize-observer.js';
+import { ExtendedResizeObserver } from '../helpers/resize-observer.js';
 import hasNativeResizeObserver from '../helpers/has-native-resize-observer.js';
 
 class D2LResizeAware extends LitElement {
