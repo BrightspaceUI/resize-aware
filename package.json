@@ -1,7 +1,7 @@
 {
   "name": "@brightspace-ui/resize-aware",
-  "type": "module",
   "version": "1.8.0",
+  "type": "module",
   "main": "d2l-resize-aware.js",
   "scripts": {
     "license-check": "d2l-license-checker -p",
