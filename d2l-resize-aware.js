@@ -1,1 +1,1 @@
-import './src/components/d2l-resize-aware.js';
+import './src/components/resize-aware.js';

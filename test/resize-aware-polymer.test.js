@@ -1,4 +1,4 @@
-import '../src/components/d2l-resize-aware.js';
+import '../src/components/resize-aware.js';
 import './helpers/polymer/test-component-slotted.js';
 import { fixture, html, oneEvent } from '@open-wc/testing';
 import NestedTestComponents from './helpers/polymer/test-component-nested.js';
