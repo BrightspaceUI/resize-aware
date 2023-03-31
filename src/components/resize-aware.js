@@ -1,8 +1,8 @@
 import { css, html, LitElement } from 'lit';
 import { ExtendedResizeObserver } from '../helpers/resize-observer.js';
-import hasNativeResizeObserver from '../helpers/has-native-resize-observer.js';
+import { hasNativeResizeObserver } from '../helpers/has-native-resize-observer.js';
 
-class D2LResizeAware extends LitElement {
+class ResizeAware extends LitElement {
 
 	static get properties() {
 		return {
@@ -93,4 +93,4 @@ class D2LResizeAware extends LitElement {
 
 }
 
-customElements.define('d2l-resize-aware', D2LResizeAware);
+customElements.define('d2l-resize-aware', ResizeAware);

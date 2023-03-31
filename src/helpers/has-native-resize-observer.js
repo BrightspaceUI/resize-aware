@@ -1,5 +1,4 @@
-const hasNativeResizeObserver =
-	!!window.ResizeObserver &&
-	/^\s*function ResizeObserver\(\) \{\s+\[native code\]\s+\}\s*$/.test(window.ResizeObserver.toString());
+const resizeObserverRegex = /^\s*function ResizeObserver\(\) \{\s+\[native code\]\s+\}\s*$/;
 
-export default hasNativeResizeObserver;
+export const hasNativeResizeObserver = !!window.ResizeObserver &&
+	resizeObserverRegex.test(window.ResizeObserver.toString());

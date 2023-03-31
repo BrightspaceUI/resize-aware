@@ -1,6 +1,6 @@
 import { getNodeClientBoundingBox, getNodeContentRect } from './node-size.js';
-import hasNativeResizeObserver from './has-native-resize-observer.js';
-import ShadowMutationObserver from './shadow-mutation-observer.js';
+import { hasNativeResizeObserver } from './has-native-resize-observer.js';
+import { ShadowMutationObserver } from './shadow-mutation-observer.js';
 
 let _shadyObserver = null;
 let _shadowObserver = null;
@@ -11,7 +11,7 @@ const _isSafari =
 	window.navigator.userAgent.indexOf('Safari/') >= 0 &&
 	window.navigator.userAgent.indexOf('Chrome/') === -1;
 
-class ResizeObserverEntryPolyfill {
+export class ResizeObserverEntryPolyfill {
 	// extension
 	get boundingBox() { return getNodeClientBoundingBox(this.__target); }
 	get contentRect() { return this.__contentRect; }
@@ -175,7 +175,7 @@ const removeListener = function(node, observer) {
 	}
 };
 
-class ResizeObserverPolyfill {
+export class ResizeObserverPolyfill {
 
 	constructor(callback) {
 		this.__callback = callback;
@@ -213,7 +213,7 @@ class ResizeObserverPolyfill {
 
 }
 
-class ExtendedResizeObserver extends ResizeObserverPolyfill {
+export class ExtendedResizeObserver extends ResizeObserverPolyfill {
 
 	constructor(callback, positionAware, boundingBox) {
 		super(callback);
@@ -250,9 +250,3 @@ class ExtendedResizeObserver extends ResizeObserverPolyfill {
 	}
 
 }
-
-export {
-	ResizeObserverPolyfill,
-	ExtendedResizeObserver,
-	ResizeObserverEntryPolyfill
-};

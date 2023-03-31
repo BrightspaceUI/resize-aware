@@ -14,7 +14,6 @@ class DOMRectReadOnlyPolyfill {
 	get top() { return this.__y; }
 	get width() { return this.__width; }
 	get x() { return this.__x; }
-
 	get y() { return this.__y; }
 
 }
@@ -41,7 +40,7 @@ const toReadOnlyDOMRect = function(domRect) {
 	);
 };
 
-const getNodeContentRect = function(node) {
+export const getNodeContentRect = function(node) {
 	if (window.SVGGraphicsElement && node instanceof SVGGraphicsElement) {
 		return toReadOnlyDOMRect(node.getBBox());
 	}
@@ -55,11 +54,6 @@ const getNodeContentRect = function(node) {
 	});
 };
 
-const getNodeClientBoundingBox = function(node) {
+export const getNodeClientBoundingBox = function(node) {
 	return toReadOnlyDOMRect(node.getBoundingClientRect());
-};
-
-export {
-	getNodeContentRect,
-	getNodeClientBoundingBox
 };

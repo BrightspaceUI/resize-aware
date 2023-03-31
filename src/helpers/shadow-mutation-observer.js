@@ -4,7 +4,7 @@
  * observer to the shadow root of webcomponents if the browser supports
  * native Shadow DOM but not native ResizeObserver
  */
-class ShadowMutationObserver {
+export class ShadowMutationObserver {
 
 	constructor(node, callback) {
 		this._hasTextarea = false;
@@ -114,5 +114,3 @@ class ShadowMutationObserver {
 	}
 
 }
-
-export default ShadowMutationObserver;
