@@ -20,7 +20,6 @@ class ResizeAware extends LitElement {
 
 	constructor() {
 		super();
-		this.positionAware = false;
 		this._onPossibleResize = this._onPossibleResize.bind(this);
 	}
 
