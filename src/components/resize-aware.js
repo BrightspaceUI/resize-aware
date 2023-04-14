@@ -21,13 +21,14 @@ class ResizeAware extends LitElement {
 	constructor() {
 		super();
 		this.positionAware = false;
+		this._onPossibleResize = this._onPossibleResize.bind(this);
 	}
 
 	connectedCallback() {
 		super.connectedCallback();
 		this._lastSize = this.getBoundingClientRect();
 
-		requestAnimationFrame(() => this._initialize());
+		requestAnimationFrame(this._initialize.bind(this));
 
 		this._onResize();
 	}
@@ -52,10 +53,10 @@ class ResizeAware extends LitElement {
 		this._usingSafariWorkaround = false;
 		if (hasNativeResizeObserver && !this.positionAware) {
 			/* Use native ResizeObserver */
-			this._observer = new window.ResizeObserver(() => this._onPossibleResize());
+			this._observer = new window.ResizeObserver(this._onPossibleResize);
 		} else {
 			/* Use polyfill */
-			this._observer = new ExtendedResizeObserver(() => this._onPossibleResize(), this.positionAware, true);
+			this._observer = new ExtendedResizeObserver(this._onPossibleResize, this.positionAware, true);
 		}
 		this._observer.observe(this);
 	}
