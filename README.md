@@ -1,5 +1,7 @@
 # @brightspace-ui/resize-aware
 
+> Deprecated: use native [`ResizeObserver`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver) construct available in most modern browsers along with the [`resize-observer-polyfill`](https://www.npmjs.com/package/resize-observer-polyfill) if needed.
+
 A lit and polymer compatible solution to reacting to changes in an element's size and/or position.
 Contains a polyfill for `ResizeObserver` that is able to detect changes inside of webcomponents on all supported browsers (Firefox, Chrome/Chromium, Edge, IE11, and Safari).
 
