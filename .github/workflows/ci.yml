@@ -57,7 +57,7 @@ jobs:
         run: |
           npm ci
           npm i @web/test-runner-playwright --no-save
-          npx playwright install-deps
+          npx playwright install --with-deps
       - name: Test
         run: >
           npx wtr --config wtr.config.js --group default --playwright
