@@ -37,7 +37,7 @@
   "devDependencies": {
     "@brightspace-ui/core": "^2",
     "@brightspace-ui/stylelint-config": "^0.8",
-    "@open-wc/testing": "^3",
+    "@open-wc/testing": "^4",
     "@polymer/polymer": "^3",
     "@web/dev-server": "^0.2",
     "@web/test-runner": "^0.16",
