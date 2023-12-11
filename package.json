@@ -46,7 +46,7 @@
     "eslint": "^8",
     "eslint-config-brightspace": "^0.25",
     "lit-analyzer": "^2",
-    "stylelint": "^15",
+    "stylelint": "^16",
     "typescript": "^5"
   }
 }
