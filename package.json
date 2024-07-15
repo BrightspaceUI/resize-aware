@@ -43,7 +43,7 @@
     "@web/test-runner": "^0.18",
     "d2l-license-checker": "^4",
     "deepmerge": "^4",
-    "eslint": "^8",
+    "eslint": "^9",
     "eslint-config-brightspace": "^0.25",
     "lit-analyzer": "^2",
     "stylelint": "^16",
